@@ -1,1 +1,1 @@
-export { Admin, AdminDetail } from './pages'
+export { Admin, AdminQueue, AdminDetail } from './pages'

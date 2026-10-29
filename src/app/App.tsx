@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { Toast } from '../components/ui'
 import { AuthPage } from '../features/auth'
-import { Admin, AdminDetail } from '../features/admin'
+import { Admin, AdminDetail, AdminQueue } from '../features/admin'
 import { Home, Reports, Detail, Statistics, About, Privacy } from '../features/public'
 import { Dashboard, CreateReport, PrivateDetail } from '../features/reporter'
 import { Forbidden, NotFound } from '../features/system'
@@ -25,7 +25,7 @@ export default function App() {
       <Route path="/lapor/baru" element={<CreateReport onToast={setToast} />} />
       <Route path="/dashboard/laporan/:code" element={<PrivateDetail />} />
       <Route path="/admin" element={<Admin />} />
-      <Route path="/admin/laporan" element={<Admin />} />
+      <Route path="/admin/laporan" element={<AdminQueue />} />
       <Route path="/admin/laporan/:code" element={<AdminDetail />} />
       <Route path="/admin/statistik" element={<Statistics admin />} />
       <Route path="/403" element={<Forbidden />} />
