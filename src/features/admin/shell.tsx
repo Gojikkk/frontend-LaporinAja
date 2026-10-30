@@ -1,10 +1,11 @@
 import { useEffect, type ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Files, LayoutDashboard, LogOut, MessageSquareText } from 'lucide-react'
+import { Files, LayoutDashboard, LogOut, MessageSquareText, Tags } from 'lucide-react'
 
 const navItems = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/admin/laporan', label: 'Manajemen Laporan', icon: Files, end: false },
+  { to: '/admin/kategori', label: 'Kategori Laporan', icon: Tags, end: false },
 ]
 
 /** Judul tab mengikuti halaman aktif, lalu dikembalikan saat admin ditinggalkan. */

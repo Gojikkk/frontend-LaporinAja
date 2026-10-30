@@ -390,6 +390,12 @@ html:has(.adm)::-webkit-scrollbar {
   border-color: #fee2e2;
 }
 
+/* Varian ringkas untuk aksi di dalam kartu (min-height 44 sesuai Figma). */
+.adm-btn-sm {
+  min-height: 44px;
+  padding: 10px 14px;
+}
+
 .adm-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -636,6 +642,106 @@ html:has(.adm)::-webkit-scrollbar {
 .adm-badge.tone-duplicate {
   background: #f5f3ff;
   color: #6d28d9;
+}
+
+/* -------------------------------------------------------- kelola kategori */
+
+.adm-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  align-self: stretch;
+}
+
+.adm-cat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 16px;
+  align-self: stretch;
+}
+
+.adm-cat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1 1 320px;
+  max-width: 400px;
+  min-height: 180px;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--adm-line);
+  background: #fff;
+}
+
+.adm-cat-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.adm-cat-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 8px;
+  border: 1px solid var(--adm-line);
+  background: var(--adm-canvas);
+  color: var(--adm-teal);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.adm-cat-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 0 0;
+  min-width: 0;
+}
+
+.adm-cat-title {
+  color: var(--adm-navy);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 125%;
+  letter-spacing: -0.4px;
+  overflow-wrap: anywhere;
+}
+
+.adm-cat-desc {
+  color: var(--adm-teal);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 155%;
+  overflow-wrap: anywhere;
+}
+
+.adm-cat-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.adm-cat-actions .adm-icon-btn {
+  margin-left: auto;
+  color: var(--adm-danger);
+}
+
+.adm-cat-actions .adm-icon-btn:hover {
+  background: var(--adm-danger-soft);
+}
+
+@media (hover: hover) {
+  .adm-cat-card:hover {
+    border-color: #cbd5e1;
+  }
 }
 
 /* ------------------------------------------------------------------ filter */
@@ -1095,6 +1201,23 @@ html:has(.adm)::-webkit-scrollbar {
   line-height: 150%;
 }
 
+.adm-dialog input[type='text'] {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid var(--adm-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--adm-ink);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 155%;
+}
+
+.adm-dialog input[type='text']::placeholder {
+  color: var(--adm-muted);
+}
+
 .adm-dialog textarea {
   width: 100%;
   min-height: 96px;
@@ -1208,6 +1331,7 @@ html:has(.adm)::-webkit-scrollbar {
 .adm-title,
 .adm-section-title,
 .adm-card-title,
+.adm-cat-title,
 .adm-dialog-title,
 .adm-empty h2 {
   text-wrap: balance;
@@ -1239,6 +1363,8 @@ html:has(.adm)::-webkit-scrollbar {
 .adm-row,
 .adm-metric,
 .adm-card,
+.adm-cat-card,
+.adm-cat-icon,
 .adm-filter-card,
 .adm-page-btn,
 .adm-more,
@@ -1495,6 +1621,15 @@ html:has(.adm)::-webkit-scrollbar {
 
   .adm-action-list .adm-btn {
     flex: 1 0 100%;
+  }
+
+  .adm-cat-card {
+    max-width: none;
+    padding: 20px;
+  }
+
+  .adm-cat-actions .adm-btn {
+    flex: 1 0 auto;
   }
 
   .adm-metric {
