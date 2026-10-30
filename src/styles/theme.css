@@ -53,6 +53,22 @@ html:has(.app-theme) body {
   color: var(--app-teal);
 }
 
+/* tombol: teks harus stabil, tidak berubah saat hover/fokus */
+.app-theme a.button:hover,
+.app-theme a.button:focus-visible {
+  color: #fff;
+}
+
+.app-theme a.button.outline:hover,
+.app-theme a.button.outline:focus-visible {
+  color: var(--app-navy);
+}
+
+.app-theme a.button.quiet:hover,
+.app-theme a.button.quiet:focus-visible {
+  color: var(--app-body);
+}
+
 /* ------------------------------------------------------------------ header */
 
 .app-theme .topbar {
