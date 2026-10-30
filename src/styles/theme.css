@@ -954,7 +954,6 @@ html:has(.app-theme) body {
   background: #fff;
   border-top: 1px solid var(--app-line);
 }
-
 .app-theme .footer-inner > span,
 .app-theme .footer-inner > a:last-child {
   color: var(--app-muted);
@@ -1056,4 +1055,25 @@ html:has(.app-theme) body {
     animation: none;
   }
 }
+
+/* ------------------------------------------------------- dropdown */
+
+.app-theme select {
+  appearance: none;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 36px 0 12px;
+  border: 1px solid var(--app-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--app-ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.app-theme select option {
+  background: #fff;
+  color: var(--app-ink);
+}
+
 

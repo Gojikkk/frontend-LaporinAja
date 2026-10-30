@@ -800,6 +800,24 @@ html:has(.adm)::-webkit-scrollbar {
   color: var(--adm-muted);
 }
 
+.adm select {
+  appearance: none;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 36px 0 12px;
+  border: 1px solid var(--adm-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--adm-ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.adm select option {
+  background: #fff;
+  color: var(--adm-ink);
+}
+
 .adm-select-wrap svg {
   position: absolute;
   right: 12px;
