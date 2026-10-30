@@ -1077,3 +1077,99 @@ html:has(.app-theme) body {
 }
 
 
+
+
+/* ------------------------------------------------------- dropdown */
+
+.app-theme .select-field {
+  position: relative;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.app-theme .select-field > svg {
+  flex: none;
+}
+
+.app-theme .select-trigger {
+  flex: 1;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid var(--app-line);
+  background: #fff;
+  border-radius: 8px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--app-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.app-theme .select-trigger:hover {
+  border-color: #9db4b0;
+}
+
+.app-theme .select-trigger:focus-visible {
+  outline: 3px solid var(--app-teal);
+  outline-offset: 2px;
+}
+
+.app-theme .select-chev {
+  flex: none;
+  transition: transform 0.2s ease;
+  color: var(--app-muted);
+}
+
+.app-theme .select-chev.open {
+  transform: rotate(180deg);
+}
+
+.app-theme .select-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--app-line);
+  border-radius: 10px;
+  box-shadow: 0 18px 44px rgba(16, 45, 59, 0.16);
+  padding: 6px;
+  z-index: 40;
+  max-height: 280px;
+  overflow: auto;
+  animation: menu-in 0.18s ease backwards;
+}
+
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.app-theme .select-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--app-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.app-theme .select-option:hover,
+.app-theme .select-option.selected {
+  background: var(--app-teal-soft);
+  color: var(--app-teal);
+}
