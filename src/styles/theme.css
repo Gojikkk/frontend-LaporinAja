@@ -1004,3 +1004,56 @@ html:has(.app-theme) body {
     animation: none;
   }
 }
+
+/* ------------------------------------------- gerakan antar elemen */
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.app-theme .report-grid .report-card,
+.app-theme .stats-grid > *,
+.app-theme .steps-list .step,
+.app-theme .stats-columns > *,
+.app-theme .my-report-list .my-report-row {
+  animation: card-in 0.45s ease backwards;
+}
+
+.app-theme .report-grid .report-card:nth-child(1) { animation-delay: 0.03s; }
+.app-theme .report-grid .report-card:nth-child(2) { animation-delay: 0.08s; }
+.app-theme .report-grid .report-card:nth-child(3) { animation-delay: 0.13s; }
+.app-theme .report-grid .report-card:nth-child(4) { animation-delay: 0.18s; }
+
+.app-theme .stats-grid > *:nth-child(2) { animation-delay: 0.08s; }
+.app-theme .stats-grid > *:nth-child(3) { animation-delay: 0.13s; }
+.app-theme .stats-grid > *:nth-child(4) { animation-delay: 0.18s; }
+
+.app-theme .steps-list .step:nth-child(1) { animation-delay: 0.03s; }
+.app-theme .steps-list .step:nth-child(2) { animation-delay: 0.08s; }
+.app-theme .steps-list .step:nth-child(3) { animation-delay: 0.13s; }
+.app-theme .steps-list .step:nth-child(4) { animation-delay: 0.18s; }
+
+.app-theme .stats-columns > *:nth-child(2) { animation-delay: 0.12s; }
+
+.app-theme .my-report-list .my-report-row:nth-child(2) { animation-delay: 0.05s; }
+.app-theme .my-report-list .my-report-row:nth-child(3) { animation-delay: 0.1s; }
+
+.app-theme .step:hover h3 { color: var(--app-teal); }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-theme .report-grid .report-card,
+  .app-theme .stats-grid > *,
+  .app-theme .steps-list .step,
+  .app-theme .stats-columns > *,
+  .app-theme .my-report-list .my-report-row {
+    animation: none;
+  }
+}
+
