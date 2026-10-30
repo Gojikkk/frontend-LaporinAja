@@ -717,13 +717,13 @@ export function countByStatus(rows: AdminReport[]) {
 /* langsung terlihat di halaman warga.                                       */
 /* ------------------------------------------------------------------------- */
 
-const categoryVisual: Record<string, { icon: string; tone: string }> = {
-  'Jalan rusak': { icon: '⌁', tone: 'blue' },
-  'Lampu jalan': { icon: '☼', tone: 'amber' },
-  Sampah: { icon: '♧', tone: 'green' },
-  'Saluran air': { icon: '≈', tone: 'teal' },
-  'Fasilitas umum': { icon: '⌂', tone: 'purple' },
-  Lainnya: { icon: '•', tone: 'amber' },
+const categoryTone: Record<string, string> = {
+  'Jalan rusak': 'blue',
+  'Lampu jalan': 'amber',
+  Sampah: 'green',
+  'Saluran air': 'teal',
+  'Fasilitas umum': 'purple',
+  Lainnya: 'amber',
 }
 
 /** Status yang boleh tampil di halaman publik. */
@@ -738,7 +738,7 @@ export function publicReports(rows: AdminReport[]) {
 
 /** Bentuk ringkas yang dipakai kartu laporan dan linimasa publik. */
 export function toCard(report: AdminReport): Report {
-  const visual = categoryVisual[report.category] ?? { icon: '•', tone: 'amber' }
+  const tone = categoryTone[report.category] ?? 'amber'
   return {
     code: report.code,
     title: report.title,
@@ -747,9 +747,8 @@ export function toCard(report: AdminReport): Report {
     village: report.village,
     status: report.status,
     date: formatSubmitted(report.submittedAt),
-    description: report.description,
-    icon: visual.icon,
-    tone: visual.tone,
+    description: report.description,
+    tone,
   }
 }
 

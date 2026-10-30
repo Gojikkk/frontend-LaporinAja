@@ -225,85 +225,16 @@ html:has(.app-theme) body {
   background: var(--app-line);
 }
 
-/* Ilustrasi kota: satu palet biru-kehijauan, bukan hijau tanah + jingga. */
-.app-theme .hero-visual {
-  background: var(--app-teal-soft);
-  box-shadow: 0 16px 40px rgba(16, 45, 59, 0.1);
+/* Hero tanpa ilustrasi dekoratif: satu kolom teks yang lapang. */
+.app-theme .hero-inner {
+  grid-template-columns: minmax(0, 720px);
+  min-height: 0;
+  padding-top: 72px;
+  padding-bottom: 64px;
 }
 
-.app-theme .visual-glow {
-  background: #9bd6d1;
-  opacity: 0.55;
-}
-
-.app-theme .visual-label {
-  color: var(--app-body);
-}
-
-.app-theme .visual-label > span:last-child {
-  color: var(--app-teal);
-}
-
-.app-theme .pulse {
-  background: var(--app-teal);
-  box-shadow: 0 0 0 4px var(--app-teal-line);
-}
-
-.app-theme .visual-caption {
-  color: var(--app-muted);
-}
-
-.app-theme .building {
-  background: #8fb2b6;
-}
-
-.app-theme .building i {
-  background: #e2f0ef;
-}
-
-.app-theme .b1 {
-  background: #a7c4c7;
-}
-
-.app-theme .b2 {
-  background: #7ea3a8;
-}
-
-.app-theme .b3 {
-  background: #95b7ba;
-}
-
-.app-theme .b4 {
-  background: #6f979c;
-}
-
-.app-theme .b5 {
-  background: #a3c0c3;
-}
-
-.app-theme .city-road {
-  background: #7fa3a7;
-}
-
-.app-theme .city-road:after {
-  border-top-color: #e2f0ef;
-}
-
-.app-theme .map-pin,
-.app-theme .pin-three {
-  color: #0e7490;
-}
-
-.app-theme .pin-two {
-  color: #0f766e;
-}
-
-.app-theme .float-icon {
-  color: #0f766e;
-}
-
-.app-theme .floating-report > svg {
-  color: #94a3b8;
+.app-theme .hero-copy h1 {
+  font-size: 46px;
 }
 
 /* ------------------------------------------------------ kartu & bagian */
@@ -382,7 +313,11 @@ html:has(.app-theme) body {
   color: #fff;
 }
 
-/* Seni kartu laporan: palet tenang yang senada dengan aksen admin. */
+.app-theme .stat-note:hover {
+  background: #0d2531;
+}
+
+/* Kartu laporan: bidang warna datar dengan ikon kategori, tanpa ilustrasi. */
 .app-theme .report-art,
 .app-theme .report-art.teal {
   background: #e8f4f2;
@@ -408,106 +343,40 @@ html:has(.app-theme) body {
   background: #f4efe4;
 }
 
-.app-theme .art-sun {
-  background: #b7e0dc80;
-}
-
-.app-theme .art-hill {
-  background: #a9c6c4;
-}
-
-.app-theme .hill-two {
-  background: #85a8a6;
-}
-
-.app-theme .blue .art-hill {
-  background: #a7c2c9;
-}
-
-.app-theme .blue .hill-two {
-  background: #7f9fa7;
-}
-
-.app-theme .green .art-hill {
-  background: #b0c8bb;
-}
-
-.app-theme .green .hill-two {
-  background: #87a79a;
-}
-
-.app-theme .teal .art-hill {
-  background: #a4c9c2;
-}
-
-.app-theme .teal .hill-two {
-  background: #7aa8a0;
-}
-
-.app-theme .purple .art-hill {
-  background: #b9bacd;
-}
-
-.app-theme .purple .hill-two {
-  background: #9194ad;
-}
-
-.app-theme .red .art-hill {
-  background: #c8b1ac;
-}
-
-.app-theme .red .hill-two {
-  background: #a2867f;
-}
-
-.app-theme .amber .art-hill {
-  background: #c6bda6;
-}
-
-.app-theme .amber .hill-two {
-  background: #a4987b;
+.app-theme .report-art {
+  height: 132px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .app-theme .art-symbol {
+  position: static;
+  transform: none;
+  font-size: 0;
   color: var(--app-teal);
-  text-shadow: 0 2px 0 #ffffffcc;
+  text-shadow: none;
+}
+
+.app-theme .art-symbol svg {
+  width: 34px;
+  height: 34px;
+}
+
+.app-theme .detail-art {
+  height: 220px;
+}
+
+.app-theme .detail-art .art-symbol svg {
+  width: 56px;
+  height: 56px;
 }
 
 .app-theme .art-code {
-  background: #ffffffd9;
+  background: #fff;
   color: var(--app-navy);
-}
-
-.app-theme .card-meta {
-  color: var(--app-muted);
-}
-
-.app-theme .card-meta span:first-child {
-  color: var(--app-teal);
-}
-
-.app-theme .meta-dot {
-  background: #cbd5e1;
-}
-
-.app-theme .report-title {
-  color: var(--app-navy);
-}
-
-.app-theme .report-title:hover {
-  color: var(--app-teal);
-}
-
-.app-theme .report-place {
-  color: var(--app-muted);
-}
-
-.app-theme .report-place svg {
-  color: var(--app-teal);
-}
-
-.app-theme .card-bottom {
-  border-top-color: var(--app-line);
+  border: 1px solid var(--app-line);
+  border-radius: 6px;
 }
 
 /* ---------------------------------------------------------- status badge */
