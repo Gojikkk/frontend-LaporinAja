@@ -18,7 +18,7 @@ export function Header({ mode='public' }: { mode?:'public'|'reporter'|'admin' })
 
 export function Footer(){return <footer className="footer"><div className="footer-inner"><Link className="brand footer-brand" to="/"><span className="brand-mark"><MapPin size={18} fill="currentColor"/></span><span>Laporin<span>Aja</span><small>TRANSPARANSI BERSAMA</small></span></Link><span>Prototype kompetisi, bukan kanal resmi pemerintah.</span><Link to="/kebijakan-privasi">Privasi dan aturan <ArrowUpRight size={14}/></Link></div></footer>}
 
-export function AppShell({children, mode='public', footer=true}: {children:ReactNode;mode?:'public'|'reporter'|'admin';footer?:boolean}){return <><Header mode={mode}/>{children}{footer&&<Footer/>}</>}
+export function AppShell({children, mode='public', footer=true}: {children:ReactNode;mode?:'public'|'reporter'|'admin';footer?:boolean}){return <div className={`app-theme app-${mode}`}><Header mode={mode}/>{children}{footer&&<Footer/>}</div>}
 
 export function PageIntro({eyebrow,title,description,action}:{eyebrow:string;title:string;description:string;action?:ReactNode}){return <div className="page-intro"><div><div className="eyebrow"><span/> {eyebrow}</div><h1>{title}</h1><p>{description}</p></div>{action&&<div className="intro-action">{action}</div>}</div>}
 
