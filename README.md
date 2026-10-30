@@ -28,8 +28,11 @@ src/
     */index.ts                  feature exports
   shared/
     api/client.ts               REST client, credentials, CSRF, normalized errors
-    report-data.ts              shared report/status types and demo data
+    report-data.ts              status/category types and public card shape
+    report-store.ts             demo report store shared by admin, public, reporter
   styles/global.css             responsive global design system
+  styles/admin.css              admin workspace (LAP-23/LAP-30 theme, .adm)
+  styles/theme.css              shared LAP-23 theme for public/reporter (.app-theme)
   main.tsx                      React entry point and BrowserRouter
   vite-env.d.ts                 Vite environment types
 ```
