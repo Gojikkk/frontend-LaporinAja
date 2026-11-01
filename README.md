@@ -1,17 +1,75 @@
-# LaporinAja — frontend
+# LaporinAja
 
-Frontend React untuk wireframe halaman publik, pelapor, dan administrator platform. Rute memakai padanan Indonesia pada PRD untuk sementara (OQ-08 belum diputuskan tim). Prototype kompetisi ini bukan kanal resmi pemerintah.
+**LaporinAja** adalah website pelaporan masalah fasilitas publik (jalan berlubang, lampu mati, sampah menumpuk, saluran air tersumbat) yang menekankan transparansi tindak lanjut — pelapor tidak hanya mengirim laporan, tapi juga dapat memantau status, riwayat perubahan, dan bukti penanganan secara real-time. Prototype ini dibuat untuk kompetisi **Multimedia In Action (MIA) 2026 – Web In Action (WIA)**, kategori *Civic Reporting & Accountability*.
 
-## Menjalankan
+> ⚠️ Prototype kompetisi. Tidak ada integrasi dengan pemerintah atau instansi resmi.
 
-Gunakan Node.js 20 atau lebih baru:
+---
+
+## Tech Stack
+
+| Lapisan | Teknologi |
+|---------|-----------|
+| UI Framework | React 18 + TypeScript |
+| Build Tool | Vite |
+| Styling | CSS Modules (custom design system, tanpa UI library) |
+| Routing | React Router v6 (BrowserRouter) |
+| HTTP Client | Fetch API (`credentials: "include"`, CSRF-aware) |
+| State/Demo Data | In-memory store (`report-store.ts`) |
+| Lingkungan | Node.js 20+ |
+
+---
+
+## Cara Menjalankan
+
+### Prasyarat
+- Node.js 20 atau lebih baru
+- npm
+
+### Clone → Install → Run
 
 ```sh
+# 1. Clone repo
+git clone <repository-url>
+cd frontend-LaporinAja
+
+# 2. Install dependencies
 npm install
+
+# 3. Salin file env dan sesuaikan
+cp .env.example .env.local
+
+# 4. Jalankan dev server
 npm run dev
 ```
 
-Vite membuka frontend pada `http://localhost:5173`. Untuk produksi, jalankan `npm run build`.
+Vite membuka frontend pada `http://localhost:5173`.
+
+Untuk build produksi: `npm run build` → hasil di folder `dist/`.
+
+---
+
+## Progress Saat Ini
+
+Frontend sudah mencakup seluruh alur **MVP (FR-001 s.d. FR-018)** dari PRD:
+
+| Area | Status | Keterangan |
+|------|--------|------------|
+| Landing page | ✅ | Hero, kategori, statistik, CTA |
+| Registrasi & Login | ✅ | Form validasi + error handling |
+| Pembuatan laporan | ✅ | Form multipart dengan upload foto |
+| Daftar laporan publik | ✅ | Filter kategori, status, wilayah |
+| Detail laporan publik | ✅ | Riwayat status + bukti tindak lanjut |
+| Dashboard pelapor | ✅ | Daftar laporan milik sendiri + tracking |
+| Dashboard admin | ✅ | Antrean laporan, aksi verifikasi/tolak |
+| Manajemen kategori admin | ✅ | CRUD kategori (FR-023 / Should Have) |
+| Halaman statistik | ✅ | Statistik dasar laporan |
+| Halaman sistem (403 / 404) | ✅ | |
+| Responsif (mobile–desktop) | ✅ | Breakpoint 360px – 1400px |
+
+Demo data tersedia di `src/shared/report-store.ts` — perubahan status admin langsung tercermin di halaman publik dan pelapor tanpa backend.
+
+---
 
 ## Struktur frontend
 
