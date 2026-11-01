@@ -22,6 +22,13 @@ html:has(.app-theme) {
   --app-danger-soft: #fef2f2;
   --app-warning: #b45309;
   --app-warning-soft: #fffbeb;
+  --app-orange: #f97316;
+  --app-orange-dark: #ea6a0c;
+  --app-on-orange: #0f172a;
+  --app-navy-line: #24485a;
+  --app-on-dark: #c4dadd;
+  --app-on-dark-soft: #9fb8bd;
+  --app-on-dark-accent: #9cd3d2;
   --app-shadow: 0 10px 30px rgba(16, 45, 59, 0.08);
 }
 
@@ -56,7 +63,7 @@ html:has(.app-theme) body {
 /* tombol: teks harus stabil, tidak berubah saat hover/fokus */
 .app-theme a.button:hover,
 .app-theme a.button:focus-visible {
-  color: #fff;
+  color: var(--app-on-orange);
 }
 
 .app-theme a.button.outline:hover,
@@ -66,7 +73,7 @@ html:has(.app-theme) body {
 
 .app-theme a.button.quiet:hover,
 .app-theme a.button.quiet:focus-visible {
-  color: var(--app-body);
+  color: var(--app-navy);
 }
 
 /* ------------------------------------------------------------------ header */
@@ -74,6 +81,67 @@ html:has(.app-theme) body {
 .app-theme .topbar {
   background: #fff;
   border-bottom: 1px solid var(--app-line);
+  height: 88px;
+}
+
+.app-theme .nav-wrap {
+  max-width: 1280px;
+  padding: 0 80px;
+}
+
+.app-theme .main-nav {
+  gap: 36px;
+}
+
+.app-theme .nav-link {
+  font-size: 14px;
+}
+
+/* "Masuk" pada header publik memakai bidang putih bergaris, bukan teks polos. */
+.app-theme .topbar .button.quiet {
+  background: #fff;
+  border-color: var(--app-line);
+  color: var(--app-navy);
+}
+
+.app-theme .topbar .button.quiet:hover {
+  background: var(--app-canvas);
+}
+
+@media (max-width: 1000px) {
+  .app-theme .nav-wrap {
+    padding: 0 32px;
+  }
+
+  .app-theme .main-nav {
+    gap: 22px;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-theme .topbar {
+    height: 72px;
+  }
+
+  .app-theme .nav-wrap {
+    padding: 0 20px;
+  }
+
+  .app-theme .main-nav {
+    top: 71px;
+    gap: 0;
+    border-bottom: 1px solid var(--app-line);
+  }
+
+  .app-theme .topbar .button.quiet {
+    border-color: var(--app-line);
+  }
+}
+
+@media (max-width: 430px) {
+  .app-theme .nav-wrap {
+    padding: 0 16px;
+  }
 }
 
 .app-theme .brand {
@@ -137,16 +205,18 @@ html:has(.app-theme) body {
 /* ----------------------------------------------------------------- tombol */
 
 .app-theme .button {
-  border-radius: 10px;
-  background: var(--app-teal);
-  color: #fff;
+  min-height: 45px;
+  border-radius: 8px;
+  background: var(--app-orange);
+  color: var(--app-on-orange);
   font-size: 13px;
   font-weight: 700;
   border-color: transparent;
 }
 
 .app-theme .button:hover {
-  background: var(--app-teal-dark);
+  background: var(--app-orange-dark);
+  color: var(--app-on-orange);
 }
 
 .app-theme .button.outline {
@@ -162,7 +232,7 @@ html:has(.app-theme) body {
 
 .app-theme .button.quiet {
   background: transparent;
-  color: var(--app-body);
+  color: var(--app-navy);
 }
 
 .app-theme .button.quiet:hover {
@@ -967,12 +1037,104 @@ html:has(.app-theme) body {
 /* --------------------------------------------------------------- footer */
 
 .app-theme .footer {
-  background: #fff;
-  border-top: 1px solid var(--app-line);
+  background: var(--app-navy);
+  border-top: 0;
+  color: var(--app-on-dark);
 }
-.app-theme .footer-inner > span,
-.app-theme .footer-inner > a:last-child {
-  color: var(--app-muted);
+
+.app-theme .footer-inner {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 48px 80px 28px;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px 48px;
+  align-items: start;
+}
+
+.app-theme .footer-brand {
+  color: #fff;
+  font-size: 20px;
+}
+
+.app-theme .footer-brand .brand-mark {
+  background: #ffffff1a;
+  color: var(--app-on-dark-accent);
+}
+
+.app-theme .footer-brand > span:last-child > span {
+  color: var(--app-on-dark-accent);
+}
+
+.app-theme .footer-about p {
+  margin: 14px 0 0;
+  max-width: 420px;
+  color: var(--app-on-dark-soft);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.app-theme .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 28px;
+}
+
+.app-theme .footer-links a {
+  color: var(--app-on-dark);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.app-theme .footer-links a:hover {
+  color: #fff;
+}
+
+.app-theme .footer-bottom {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 16px;
+  padding-top: 20px;
+  border-top: 1px solid #ffffff1f;
+  color: var(--app-on-dark-soft);
+  font-size: 12px;
+}
+
+@media (max-width: 1000px) {
+  .app-theme .footer-inner {
+    padding: 40px 32px 24px;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-theme .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 32px 20px 24px;
+  }
+
+  .app-theme .footer-links {
+    gap: 12px 20px;
+  }
+
+  .app-theme .footer-bottom {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 430px) {
+  .app-theme .footer-inner {
+    padding: 28px 16px 22px;
+  }
+
+  .app-theme .footer-links a {
+    font-size: 12px;
+  }
 }
 
 .app-theme .disclaimer {

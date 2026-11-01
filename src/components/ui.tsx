@@ -16,13 +16,27 @@ export function Modal({ title, children, onClose }: { title:string; children:Rea
 
 export function Header({ mode='public' }: { mode?:'public'|'reporter'|'admin' }) {
   const [open,setOpen]=useState(false)
-  const links=mode==='public'?[['/','Beranda'],['/laporan','Jelajahi'],['/statistik','Statistik'],['/tentang','Tentang']]:mode==='admin'?[['/admin','Ringkasan'],['/admin/laporan','Semua laporan'],['/admin/statistik','Statistik']]:[['/dashboard','Ringkasan'],['/dashboard','Laporan saya']]
-  return <header className="topbar"><div className="nav-wrap"><Link to="/" className="brand" aria-label="LaporinAja, beranda"><span className="brand-mark"><MapPin size={18} fill="currentColor"/></span><span>Laporin<span>Aja</span></span></Link><button className="icon-button mobile-menu" aria-label={open?'Tutup navigasi':'Buka navigasi'} aria-expanded={open} onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button><nav className={`main-nav ${open?'nav-open':''}`} aria-label="Navigasi utama">{links.map(([to,label])=><NavLink end={to==='/' || to==='/dashboard' || to==='/admin'} onClick={()=>setOpen(false)} key={label} to={to} className={({isActive})=>isActive?'nav-link active':'nav-link'}>{label}</NavLink>)}{mode==='admin'&&<span className="role-pill"><ShieldCheck size={14}/> Administrator</span>}{mode==='reporter'&&<span className="role-pill"><Users size={14}/> Pelapor</span>}<div className="nav-actions">{mode==='public'?<><Button to="/masuk" variant="quiet">Masuk</Button><Button to="/daftar" icon={<ArrowRight size={16}/>}>Buat laporan</Button></>:<><button className="icon-button notice-button" aria-label="Notifikasi"><Bell size={18}/><i/></button><button className="profile-button" aria-label="Menu akun"><span className="avatar">{mode==='admin'?'A':'R'}</span><span>{mode==='admin'?'Admin':'Rani'}</span><ChevronDown size={15}/></button></>}</div></nav></div></header>
+  const links=mode==='public'?[['/','Beranda'],['/laporan','Laporan'],['/statistik','Statistik'],['/tentang','Tentang']]:mode==='admin'?[['/admin','Ringkasan'],['/admin/laporan','Semua laporan'],['/admin/statistik','Statistik']]:[['/dashboard','Ringkasan'],['/dashboard','Laporan saya']]
+  return <header className="topbar"><div className="nav-wrap"><Link to="/" className="brand" aria-label="LaporinAja, beranda"><span className="brand-mark"><MapPin size={18} fill="currentColor"/></span><span>Laporin<span>Aja</span></span></Link><button className="icon-button mobile-menu" aria-label={open?'Tutup navigasi':'Buka navigasi'} aria-expanded={open} onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button><nav className={`main-nav ${open?'nav-open':''}`} aria-label="Navigasi utama">{links.map(([to,label])=><NavLink end={to==='/' || to==='/dashboard' || to==='/admin'} onClick={()=>setOpen(false)} key={label} to={to} className={({isActive})=>isActive?'nav-link active':'nav-link'}>{label}</NavLink>)}{mode==='admin'&&<span className="role-pill"><ShieldCheck size={14}/> Administrator</span>}{mode==='reporter'&&<span className="role-pill"><Users size={14}/> Pelapor</span>}<div className="nav-actions">{mode==='public'?<><Button to="/masuk" variant="quiet">Masuk</Button><Button to="/daftar" icon={<ArrowRight size={16}/>}>Lapor</Button></>:<><button className="icon-button notice-button" aria-label="Notifikasi"><Bell size={18}/><i/></button><button className="profile-button" aria-label="Menu akun"><span className="avatar">{mode==='admin'?'A':'R'}</span><span>{mode==='admin'?'Admin':'Rani'}</span><ChevronDown size={15}/></button></>}</div></nav></div></header>
 }
 
-export function Footer(){return <footer className="footer"><div className="footer-inner"><Link className="brand footer-brand" to="/"><span className="brand-mark"><MapPin size={18} fill="currentColor"/></span><span>Laporin<span>Aja</span></span></Link><span>Prototype kompetisi, bukan kanal resmi pemerintah.</span><Link to="/kebijakan-privasi">Privasi dan aturan <ArrowUpRight size={14}/></Link></div></footer>}
+export function Footer(){
+  return <footer className="footer"><div className="footer-inner">
+    <div className="footer-about">
+      <Link className="brand footer-brand" to="/"><span className="brand-mark"><MapPin size={18} fill="currentColor"/></span><span>Laporin<span>Aja</span></span></Link>
+      <p>Prototype kompetisi warga untuk mencatat temuan fasilitas publik. Bukan kanal resmi pemerintah dan tidak terhubung dengan instansi mana pun.</p>
+    </div>
+    <nav className="footer-links" aria-label="Tautan footer">
+      <Link to="/laporan">Laporan warga</Link>
+      <Link to="/statistik">Statistik</Link>
+      <Link to="/tentang">Tentang</Link>
+      <Link to="/kebijakan-privasi">Kebijakan privasi</Link>
+    </nav>
+    <div className="footer-bottom"><span>© 2026 LaporinAja</span><span>Dibuat bersama warga</span></div>
+  </div></footer>
+}
 
-export function AppShell({children, mode='public', footer=true}: {children:ReactNode;mode?:'public'|'reporter'|'admin';footer?:boolean}){return <div className={`app-theme app-${mode}`}><Header mode={mode}/>{children}{footer&&<Footer/>}</div>}
+export function AppShell({children, mode='public', footer=true, pageClass=''}: {children:ReactNode;mode?:'public'|'reporter'|'admin';footer?:boolean;pageClass?:string}){return <div className={`app-theme app-${mode} ${pageClass}`.trim()}><Header mode={mode}/>{children}{footer&&<Footer/>}</div>}
 
 export function PageIntro({title,description,action}:{title:string;description:string;action?:ReactNode}){return <div className="page-intro"><div><h1>{title}</h1><p>{description}</p></div>{action&&<div className="intro-action">{action}</div>}</div>}
 

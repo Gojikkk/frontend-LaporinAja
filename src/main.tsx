@@ -5,5 +5,6 @@ import App from './app/App'
 import './styles/global.css'
 import './styles/admin.css'
 import './styles/theme.css'
+import './styles/home.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><BrowserRouter><App /></BrowserRouter></React.StrictMode>)

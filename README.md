@@ -36,6 +36,7 @@ src/
   styles/global.css             responsive global design system
   styles/admin.css              admin workspace (LAP-23/LAP-30 theme, .adm)
   styles/theme.css              shared LAP-23 theme for public/reporter (.app-theme)
+  styles/home.css               Beranda layout (hero, kategori, statistik, penutup)
   main.tsx                      React entry point and BrowserRouter
   vite-env.d.ts                 Vite environment types
 ```
@@ -77,4 +78,4 @@ Halaman sistem: `/403` untuk akses ditolak; rute lain yang tidak dikenal menampi
 
 ## Responsif dan aksesibilitas
 
-Layout dimulai dari layar kecil, dengan breakpoint 430, 760, dan 1000 px untuk halaman publik/pelapor, serta 640, 900, dan 1400 px untuk ruang kerja admin. Pada ukuran penerimaan 360, 768, dan 1280 px konten mengalir tanpa lebar tetap. Status selalu berikon dan berteks, field memiliki label, kontrol interaktif memiliki fokus terlihat, serta tinggi tombol minimum 44 px. Warna status memakai pasangan latar/teks gelap; aksi utama memakai biru-teal gelap dengan teks putih yang stabil saat hover.
+Layout dimulai dari layar kecil, dengan breakpoint 430, 760, dan 1000 px untuk halaman publik/pelapor, serta 640, 900, dan 1400 px untuk ruang kerja admin. Pada ukuran penerimaan 360, 768, dan 1280 px konten mengalir tanpa lebar tetap. Status selalu berikon dan berteks, field memiliki label, kontrol interaktif memiliki fokus terlihat, serta tinggi tombol minimum 44 px. Warna status memakai pasangan latar/teks gelap; aksi utama memakai oranye #F97316 dengan teks navy #0F172A yang tetap sama saat hover (tanpa perubahan warna teks, transparansi, atau bayangan tambahan).
