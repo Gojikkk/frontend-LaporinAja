@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, Bell, Building2, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CircleAlert, Clock3, Droplets, FileCheck2, FilePlus2, Filter, ImagePlus, Info, Lamp, LayoutDashboard, ListFilter, LockKeyhole, LogIn, MapPin, Menu, MessageSquareText, MoreHorizontal, Route, Search, Shapes, ShieldCheck, SlidersHorizontal, Sparkles, Trash2, Users, X } from 'lucide-react'
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, Bell, Building2, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CircleAlert, Clock3, Droplets, FileCheck2, FilePlus2, Filter, ImagePlus, Info, Lamp, LayoutDashboard, ListFilter, LockKeyhole, LogIn, LogOut, MapPin, Menu, MessageSquareText, MoreHorizontal, Route, Search, Shapes, ShieldCheck, SlidersHorizontal, Sparkles, Trash2, Users, X } from 'lucide-react'
 import { statusInfo, type Report, type Status } from '../shared/report-data'
+import { useAuth } from '../shared/auth-context'
+import { useNavigate } from 'react-router-dom'
 
 const categoryIcons = { 'Jalan rusak': Route, 'Lampu jalan': Lamp, Sampah: Trash2, 'Saluran air': Droplets, 'Fasilitas umum': Building2, Lainnya: Shapes }
 
@@ -16,8 +18,31 @@ export function Modal({ title, children, onClose }: { title:string; children:Rea
 
 export function Header({ mode='public' }: { mode?:'public'|'reporter'|'admin' }) {
   const [open,setOpen]=useState(false)
+  const [accountOpen,setAccountOpen]=useState(false)
+  const [logoutBusy,setLogoutBusy]=useState(false)
+  const [logoutError,setLogoutError]=useState('')
+  const {user,logout}=useAuth()
+  const navigate=useNavigate()
   const links=mode==='public'?[['/','Beranda'],['/laporan','Laporan'],['/statistik','Statistik'],['/tentang','Tentang']]:mode==='admin'?[['/admin','Ringkasan'],['/admin/laporan','Semua laporan'],['/admin/statistik','Statistik']]:[['/dashboard','Ringkasan'],['/dashboard','Laporan saya']]
-  return <header className="topbar"><div className="nav-wrap"><Link to="/" className="brand" aria-label="LaporinAja, beranda"><span className="brand-mark"><MapPin size={18} fill="currentColor"/></span><span>Laporin<span>Aja</span></span></Link><button className="icon-button mobile-menu" aria-label={open?'Tutup navigasi':'Buka navigasi'} aria-expanded={open} onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button><nav className={`main-nav ${open?'nav-open':''}`} aria-label="Navigasi utama">{links.map(([to,label])=><NavLink end={to==='/' || to==='/dashboard' || to==='/admin'} onClick={()=>setOpen(false)} key={label} to={to} className={({isActive})=>isActive?'nav-link active':'nav-link'}>{label}</NavLink>)}{mode==='admin'&&<span className="role-pill"><ShieldCheck size={14}/> Administrator</span>}{mode==='reporter'&&<span className="role-pill"><Users size={14}/> Pelapor</span>}<div className="nav-actions">{mode==='public'?<><Button to="/masuk" variant="quiet">Masuk</Button><Button to="/daftar" icon={<ArrowRight size={16}/>}>Lapor</Button></>:<><button className="icon-button notice-button" aria-label="Notifikasi"><Bell size={18}/><i/></button><button className="profile-button" aria-label="Menu akun"><span className="avatar">{mode==='admin'?'A':'R'}</span><span>{mode==='admin'?'Admin':'Rani'}</span><ChevronDown size={15}/></button></>}</div></nav></div></header>
+  const accountHome=user?.isAdmin?'/admin':'/dashboard'
+  const displayName=user?.name || (mode==='admin'?'Admin':'Rani')
+  const initials=displayName.trim().slice(0,1).toUpperCase()
+
+  async function handleLogout(){
+    setLogoutBusy(true)
+    setLogoutError('')
+    try{
+      await logout()
+      setOpen(false)
+      navigate('/',{replace:true})
+    }catch(error){
+      setLogoutError(error instanceof Error?error.message:'Tidak dapat keluar dari akun.')
+    }finally{
+      setLogoutBusy(false)
+    }
+  }
+
+  return <header className="topbar"><div className="nav-wrap"><Link to="/" className="brand" aria-label="LaporinAja, beranda"><span className="brand-mark"><MapPin size={18} fill="currentColor"/></span><span>Laporin<span>Aja</span></span></Link><button className="icon-button mobile-menu" aria-label={open?'Tutup navigasi':'Buka navigasi'} aria-expanded={open} onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button><nav className={`main-nav ${open?'nav-open':''}`} aria-label="Navigasi utama">{links.map(([to,label])=><NavLink end={to==='/' || to==='/dashboard' || to==='/admin'} onClick={()=>setOpen(false)} key={label} to={to} className={({isActive})=>isActive?'nav-link active':'nav-link'}>{label}</NavLink>)}{mode==='admin'&&<span className="role-pill"><ShieldCheck size={14}/> Administrator</span>}{mode==='reporter'&&<span className="role-pill"><Users size={14}/> Pelapor</span>}<div className="nav-actions">{mode==='public'&&!user?<><Button to="/masuk" variant="quiet">Masuk</Button><Button to="/daftar" icon={<ArrowRight size={16}/>}>Lapor</Button></>:<><button className="icon-button notice-button" aria-label="Notifikasi"><Bell size={18}/><i/></button><div className="account-menu"><button className="profile-button" aria-label="Menu akun" aria-expanded={accountOpen} onClick={()=>{setAccountOpen(!accountOpen);setLogoutError('')}}><span className="avatar">{initials}</span><span>{displayName}</span><ChevronDown size={15}/></button>{accountOpen&&<div className="account-dropdown"><Link to={accountHome} onClick={()=>setAccountOpen(false)}>Dashboard</Link><button type="button" disabled={logoutBusy} onClick={()=>void handleLogout()}><LogOut size={15}/>{logoutBusy?'Keluar…':'Keluar'}</button>{logoutError&&<span role="alert">{logoutError}</span>}</div>}</div></>}</div></nav></div></header>
 }
 
 export function Footer(){

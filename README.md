@@ -122,7 +122,8 @@ Vite membaca nilai `VITE_*` saat build. Atur URL sesuai environment dan bangun u
 - Browser mengirim `Origin` secara otomatis. Server Express perlu mengizinkan origin frontend secara eksplisit, mengaktifkan CORS `credentials: true`, menjawab preflight, dan memeriksa `Origin` untuk operasi mutasi. Jika server memakai token CSRF, terbitkan cookie CSRF yang dapat dibaca JavaScript dan set nama cookie/header di environment frontend.
 - Untuk deployment lintas-site yang tidak dapat membaca cookie CSRF API, set `VITE_CSRF_ENDPOINT` ke endpoint yang mengembalikan token CSRF di `{ "data": { "csrfToken": "..." } }`; token hanya ditahan di memori selama halaman terbuka.
 - API mengembalikan error konsisten `{ "error": { "code", "message", "fields" } }`. Klien memetakannya ke `ApiError`; kegagalan jaringan menampilkan pesan umum bahasa Indonesia.
-- Endpoint yang dipakai form: `POST /auth/register`, `POST /auth/login`, dan `POST /reports` (multipart). Halaman laporan, statistik, dan layar admin memakai data demonstrasi dari `src/shared/report-store.ts`; hasil moderasi admin (status, catatan tindak lanjut, linimasa) langsung tercermin di halaman publik dan pelapor.
+- Endpoint autentikasi: `POST /auth/register`, `POST /auth/login`, `GET /auth/me`, dan `POST /auth/logout`. Respons `GET /auth/me` menyertakan pengguna pada `{ "data": { "user": { "id", "name", "email", "role" } } }` (atau `{ "user": ... }`); role `admin`/`administrator` diarahkan ke area admin, pengguna lain ke dashboard pelapor. Semua request memakai cookie credentials; request mutasi mengirim CSRF sesuai variabel environment di atas.
+- Endpoint yang dipakai form laporan: `POST /reports` (multipart). Halaman laporan, statistik, dan layar admin masih memakai data demonstrasi dari `src/shared/report-store.ts`; hasil moderasi admin (status, catatan tindak lanjut, linimasa) langsung tercermin di halaman publik dan pelapor.
 
 ## Rute utama
 

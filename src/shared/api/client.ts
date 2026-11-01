@@ -21,17 +21,29 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const method = (init.method ?? 'GET').toUpperCase()
   const mutating = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
   if (init.body && !(init.body instanceof FormData)) headers.set('Content-Type', 'application/json')
-  // Browser supplies Origin. If the API has a readable CSRF cookie, mirror its configured header.
-  if (mutating && CSRF_ENDPOINT && !csrfToken) {
-    try {
-      const csrfResponse = await fetch(`${API_URL}${CSRF_ENDPOINT.startsWith('/') ? CSRF_ENDPOINT : `/${CSRF_ENDPOINT}`}`, { credentials: 'include' })
-      const csrfPayload = await csrfResponse.json().catch(() => ({}))
-      if (csrfResponse.ok) csrfToken = csrfPayload?.data?.csrfToken ?? csrfPayload?.csrfToken ?? ''
-    } catch { /* The write request below will surface the consistent network error. */ }
-  }
-  const csrf = mutating ? (csrfToken || readableCookie(CSRF_COOKIE)) : ''
-  if (csrf) headers.set(CSRF_HEADER, decodeURIComponent(csrf))
   try {
+    // Browser supplies Origin. Fetch a configured cross-origin CSRF token before mutations.
+    if (mutating && CSRF_ENDPOINT && !csrfToken) {
+      const csrfPath = CSRF_ENDPOINT.startsWith('/') ? CSRF_ENDPOINT : `/${CSRF_ENDPOINT}`
+      const csrfResponse = await fetch(`${API_URL}${csrfPath}`, { credentials: 'include' })
+      const csrfPayload = await csrfResponse.json().catch(() => ({}))
+      if (!csrfResponse.ok) {
+        const error: ApiErrorBody = csrfPayload?.error ?? {}
+        throw new ApiError(
+          csrfResponse.status,
+          error.code ?? 'CSRF_REQUEST_FAILED',
+          error.message ?? 'Tidak dapat memperoleh token keamanan dari server.',
+          error.fields,
+        )
+      }
+      csrfToken = csrfPayload?.data?.csrfToken ?? csrfPayload?.csrfToken ?? ''
+      if (!csrfToken) {
+        throw new ApiError(502, 'CSRF_TOKEN_MISSING', 'Server tidak mengirim token keamanan yang diperlukan.')
+      }
+    }
+
+    const csrf = mutating ? (csrfToken || readableCookie(CSRF_COOKIE)) : ''
+    if (csrf) headers.set(CSRF_HEADER, decodeURIComponent(csrf))
     const response = await fetch(`${API_URL}${path.startsWith('/') ? path : `/${path}`}`, { ...init, method, headers, credentials: 'include' })
     const payload = await response.json().catch(() => ({}))
     if (!response.ok) {

@@ -893,6 +893,16 @@ html:has(.app-theme) body {
   color: var(--app-danger);
 }
 
+.app-theme .auth-field-error {
+  display: block;
+  margin-top: 6px;
+  color: var(--app-danger);
+}
+
+.app-theme .form-field input[aria-invalid="true"] {
+  border-color: var(--app-danger);
+}
+
 .app-theme .auth-switch a {
   color: var(--app-teal);
 }
@@ -942,6 +952,60 @@ html:has(.app-theme) body {
   border-color: #cbd5e1;
   background: var(--app-canvas);
   color: var(--app-teal);
+}
+
+.app-theme .account-menu {
+  position: relative;
+}
+
+.app-theme .account-dropdown {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 10px);
+  right: 0;
+  display: grid;
+  min-width: 180px;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid var(--app-line);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgb(15 23 42 / 14%);
+}
+
+.app-theme .account-dropdown a,
+.app-theme .account-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--app-body);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.app-theme .account-dropdown a:hover,
+.app-theme .account-dropdown button:hover:not(:disabled) {
+  background: var(--app-teal-soft);
+  color: var(--app-teal-dark);
+}
+
+.app-theme .account-dropdown button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.app-theme .account-dropdown [role="alert"] {
+  max-width: 240px;
+  padding: 6px 10px;
+  color: var(--app-danger);
+  font-size: 12px;
 }
 
 .app-theme .upload-field:hover {

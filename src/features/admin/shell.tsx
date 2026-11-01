@@ -1,6 +1,7 @@
-import { useEffect, type ReactNode } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { useEffect, useState, type ReactNode } from 'react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { Files, LayoutDashboard, LogOut, MessageSquareText, Tags } from 'lucide-react'
+import { useAuth } from '../../shared/auth-context'
 
 const navItems = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -20,6 +21,24 @@ export function useAdminTitle(title: string) {
 }
 
 export function AdminShell({ crumb, children }: { crumb: string; children: ReactNode }) {
+  const { logout } = useAuth()
+  const navigate = useNavigate()
+  const [logoutBusy, setLogoutBusy] = useState(false)
+  const [logoutError, setLogoutError] = useState('')
+
+  async function handleLogout() {
+    setLogoutBusy(true)
+    setLogoutError('')
+    try {
+      await logout()
+      navigate('/', { replace: true })
+    } catch (error) {
+      setLogoutError(error instanceof Error ? error.message : 'Tidak dapat keluar dari akun.')
+    } finally {
+      setLogoutBusy(false)
+    }
+  }
+
   return (
     <div className="adm">
       <a className="adm-skip" href="#adm-main">
@@ -46,10 +65,10 @@ export function AdminShell({ crumb, children }: { crumb: string; children: React
                 <span>{label}</span>
               </NavLink>
             ))}
-            <Link className="adm-nav-link" to="/masuk">
+            <button className="adm-nav-link" type="button" disabled={logoutBusy} onClick={() => void handleLogout()}>
               <LogOut size={20} aria-hidden="true" />
-              <span>Logout</span>
-            </Link>
+              <span>{logoutBusy ? 'Keluar…' : 'Logout'}</span>
+            </button>
           </nav>
           <Link className="adm-public-link" to="/">
             Kembali ke situs publik ↗
@@ -63,10 +82,12 @@ export function AdminShell({ crumb, children }: { crumb: string; children: React
                 {label}
               </NavLink>
             ))}
-            <Link className="adm-quicknav-link" to="/masuk">
-              Logout
-            </Link>
+            <button className="adm-quicknav-link" type="button" disabled={logoutBusy} onClick={() => void handleLogout()}>
+              {logoutBusy ? 'Keluar…' : 'Logout'}
+            </button>
           </nav>
+
+          {logoutError && <p className="adm-logout-error" role="alert">{logoutError}</p>}
 
           <div className="adm-context">
             <span>Admin / {crumb}</span>

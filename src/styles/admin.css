@@ -171,6 +171,20 @@ html:has(.adm)::-webkit-scrollbar {
   transition: background 0.15s;
 }
 
+.adm-nav button.adm-nav-link {
+  width: 100%;
+  border: 0;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.adm-nav button.adm-nav-link:disabled,
+.adm-quicknav-link:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
 .adm-nav-link svg {
   flex: none;
   color: #fff;
@@ -227,6 +241,19 @@ html:has(.adm)::-webkit-scrollbar {
   font-size: 14px;
   font-weight: 500;
   line-height: normal;
+}
+
+.adm-quicknav button.adm-quicknav-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.adm-logout-error {
+  color: #b91c1c;
+  font-size: 14px;
 }
 
 .adm-quicknav-link.active {
