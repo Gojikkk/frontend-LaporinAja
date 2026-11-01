@@ -23,7 +23,10 @@ src/
     public/pages.tsx            landing, reports, detail, statistics, about, privacy
     auth/pages.tsx              login and registration
     reporter/pages.tsx          reporter dashboard, report form, private tracking
-    admin/pages.tsx             admin queue and report review
+    admin/pages.tsx             admin dashboard, report queue, report review
+    admin/categories.tsx        admin report category management (LAP-30)
+    admin/shell.tsx             admin workspace navigation and page title
+    admin/data.ts               shared store re-export for admin screens
     system/pages.tsx            403 and 404 views
     */index.ts                  feature exports
   shared/
@@ -60,7 +63,7 @@ Vite membaca nilai `VITE_*` saat build. Atur URL sesuai environment dan bangun u
 - Browser mengirim `Origin` secara otomatis. Server Express perlu mengizinkan origin frontend secara eksplisit, mengaktifkan CORS `credentials: true`, menjawab preflight, dan memeriksa `Origin` untuk operasi mutasi. Jika server memakai token CSRF, terbitkan cookie CSRF yang dapat dibaca JavaScript dan set nama cookie/header di environment frontend.
 - Untuk deployment lintas-site yang tidak dapat membaca cookie CSRF API, set `VITE_CSRF_ENDPOINT` ke endpoint yang mengembalikan token CSRF di `{ "data": { "csrfToken": "..." } }`; token hanya ditahan di memori selama halaman terbuka.
 - API mengembalikan error konsisten `{ "error": { "code", "message", "fields" } }`. Klien memetakannya ke `ApiError`; kegagalan jaringan menampilkan pesan umum bahasa Indonesia.
-- Endpoint yang dipakai form: `POST /auth/register`, `POST /auth/login`, dan `POST /reports` (multipart). Wireframe halaman laporan dan statistik memakai data demonstrasi.
+- Endpoint yang dipakai form: `POST /auth/register`, `POST /auth/login`, dan `POST /reports` (multipart). Halaman laporan, statistik, dan layar admin memakai data demonstrasi dari `src/shared/report-store.ts`; hasil moderasi admin (status, catatan tindak lanjut, linimasa) langsung tercermin di halaman publik dan pelapor.
 
 ## Rute utama
 
@@ -68,8 +71,10 @@ Publik: `/`, `/laporan`, `/laporan/:code`, `/statistik`, `/tentang`, `/kebijakan
 
 Pelapor: `/dashboard`, `/lapor/baru`, `/dashboard/laporan/:code`.
 
-Administrator platform: `/admin`, `/admin/laporan`, `/admin/laporan/:code`, `/admin/statistik`.
+Administrator platform: `/admin`, `/admin/laporan`, `/admin/laporan/:code`, `/admin/kategori`, `/admin/statistik`.
+
+Halaman sistem: `/403` untuk akses ditolak; rute lain yang tidak dikenal menampilkan 404.
 
 ## Responsif dan aksesibilitas
 
-Layout dimulai dari layar kecil, dengan breakpoint 430, 760, dan 1000 px; pada ukuran penerimaan 360, 768, dan 1280 px konten mengalir tanpa lebar tetap. Status selalu berikon dan berteks, field memiliki label, kontrol interaktif memiliki fokus terlihat, serta tinggi tombol minimum 44 px. Warna status memakai pasangan latar/teks gelap; aksi utama memakai biru-teal gelap dan teks putih.
+Layout dimulai dari layar kecil, dengan breakpoint 430, 760, dan 1000 px untuk halaman publik/pelapor, serta 640, 900, dan 1400 px untuk ruang kerja admin. Pada ukuran penerimaan 360, 768, dan 1280 px konten mengalir tanpa lebar tetap. Status selalu berikon dan berteks, field memiliki label, kontrol interaktif memiliki fokus terlihat, serta tinggi tombol minimum 44 px. Warna status memakai pasangan latar/teks gelap; aksi utama memakai biru-teal gelap dengan teks putih yang stabil saat hover.
