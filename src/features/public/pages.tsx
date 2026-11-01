@@ -1,41 +1,155 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, ArrowUpRight, Bell, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CircleAlert, Clock3, FileCheck2, FilePlus2, Filter, ImagePlus, Info, LayoutDashboard, ListFilter, LockKeyhole, LogIn, MapPin, Menu, MessageSquareText, MoreHorizontal, Search, ShieldCheck, SlidersHorizontal, Users, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Bell, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CircleAlert, Clock3, FileCheck2, FilePlus2, Filter, ImagePlus, Info, LayoutDashboard, ListChecks, ListFilter, LockKeyhole, LogIn, MapPin, Menu, MessageSquareText, MoreHorizontal, Search, ShieldCheck, SlidersHorizontal, Users, X } from 'lucide-react'
 import { AppShell, Button, CategoryIcon, Dropdown, PageIntro, ReportCard, StatCard, StatusBadge, Timeline, TextField, Toast, Modal } from '../../components/ui'
 import { countByStatus, publicReports, publicStatuses, latestNote, toCard, useReports } from '../../shared/report-store'
-import { statusInfo, type Status } from '../../shared/report-data'
+import { initialCategories, statusInfo, type Status } from '../../shared/report-data'
 export function Home(){
   const reports=useReports()
   const visible=publicReports(reports)
   const counts=countByStatus(visible)
   const total=visible.length
-  const resolvedPct=total?Math.round((counts.RESOLVED/total)*100):0
-  return <AppShell><main>
-    <section className="hero"><div className="hero-inner"><div className="hero-copy">
-      
-      <h1>Laporan warga,<br/>tindak lanjut yang <em>terbuka.</em></h1>
-      <p>Catat kondisi jalan, lampu, sampah, atau saluran air di sekitarmu. Status dan catatan tindak lanjutnya bisa diikuti siapa saja.</p>
-      <div className="hero-actions"><Button to="/daftar" icon={<ArrowRight size={17}/>}>Mulai buat laporan</Button><Button to="/laporan" variant="outline">Jelajahi laporan</Button></div>
-      <div className="hero-note"><ShieldCheck size={16}/> Nama dan kontak pelapor tidak ditampilkan</div>
-    </div></div></section>
-    <section className="section container">
-      <div className="section-head"><div><h2>Kondisi laporan<br/>hari ini.</h2></div><Link to="/statistik" className="text-link">Lihat ringkasan <ArrowRight size={16}/></Link></div>
-      <div className="stats-grid">
-        <StatCard label="Laporan publik" value={String(total)} detail="Sudah ditinjau admin" icon={<FileCheck2 size={19}/>}/>
-        <StatCard label="Dalam tindak lanjut" value={String(counts.IN_PROGRESS)} detail="Sedang dikerjakan" icon={<SlidersHorizontal size={19}/>}/>
-        <StatCard label="Selesai dicatat" value={String(counts.RESOLVED)} detail={`${resolvedPct}% dari laporan publik`} icon={<CheckCircle2 size={19}/>}/>
-        <Link to="/laporan" className="stat-note"><ArrowRight size={17}/><span><b>Telusuri laporan</b><br/>Lihat semua laporan warga.</span></Link>
+  const pct=(n:number)=>total?Math.round((n/total)*100):0
+  const values:[ReactNode,string,string][]=[
+    [<MessageSquareText size={24}/>,'Terbuka untuk siapa saja','Status, catatan, dan riwayat tindak lanjut bisa dibaca tanpa perlu masuk ke akun.'],
+    [<ListChecks size={24}/>,'Tercatat per kategori dan wilayah','Setiap laporan dikelompokkan agar mudah ditelusuri kembali kapan pun.'],
+    [<ShieldCheck size={24}/>,'Identitas pelapor dijaga','Halaman publik tidak menampilkan nama, kontak, atau akun pelapor.'],
+  ]
+  const steps:[string,string,string][]=[
+    ['01','Bagikan temuan','Ceritakan kondisi dan titik lokasi yang perlu diperhatikan.'],
+    ['02','Ditinjau administrator','Laporan diperiksa sebelum tampil di ruang publik.'],
+    ['03','Ikuti perkembangannya','Pantau status dan catatan terbaru pada halaman laporan.'],
+    ['04','Baca catatan selesai','Bukti tindak lanjut dicatat terbuka, tanpa klaim berlebihan.'],
+  ]
+  return <AppShell pageClass="home-page"><main>
+    <section className="home-hero">
+      <div className="home-hero-inner">
+        <div className="home-hero-copy">
+          <h1>Laporan warga,<br/>tindak lanjut yang <em>terbuka.</em></h1>
+          <p>Catat kondisi jalan, lampu, sampah, atau saluran air di sekitarmu. Status dan catatan tindak lanjutnya bisa diikuti siapa saja.</p>
+          <div className="home-hero-actions">
+            <Button to="/daftar" icon={<ArrowRight size={17}/>}>Lapor sekarang</Button>
+            <Button to="/laporan" variant="outline">Jelajahi laporan</Button>
+          </div>
+          <p className="home-hero-note"><LockKeyhole size={15}/> Nama dan kontak pelapor tidak ditampilkan.</p>
+        </div>
+        <figure className="home-hero-visual">
+          <div className="home-hero-photo" aria-hidden="true"><MapPin size={44} strokeWidth={1.4}/></div>
+          <figcaption><MapPin size={14} strokeWidth={2.2}/> Contoh dokumentasi laporan · Jakarta Timur</figcaption>
+        </figure>
       </div>
     </section>
-    <section className="section recent-section"><div className="container">
-      <div className="section-head compact"><div><h2>Laporan terbaru</h2><p>Tiga laporan terakhir yang sudah ditinjau.</p></div><Link to="/laporan" className="text-link">Semua laporan <ArrowRight size={16}/></Link></div>
-      <div className="report-grid">{visible.slice(0,3).map(r=><ReportCard key={r.code} report={toCard(r)}/>)}</div>
-    </div></section>
-    <section className="steps-section"><div className="container steps-inner">
-      <div className="steps-title"><h2>Empat langkah,<br/>satu laporan.</h2><p>Setiap laporan punya jejak yang bisa diikuti, dari pertama dicatat sampai catatan tindak lanjut terakhir.</p><Button to="/tentang" variant="outline" icon={<ArrowRight size={16}/>}>Baca alurnya</Button></div>
-      <div className="steps-list">{[['01','Bagikan temuan','Ceritakan kondisi dan lokasi yang perlu diperhatikan.'],['02','Menunggu verifikasi','Administrator platform meninjau laporan yang masuk.'],['03','Ikuti perkembangannya','Baca catatan dan status terbaru pada halaman laporan.'],['04','Lihat catatan selesai','Bukti tindak lanjut dicatat secara terbuka.']].map(([n,t,d])=><article className="step" key={n}><span className="step-number">{n}</span><div><h3>{t}</h3><p>{d}</p></div><ArrowUpRight size={17}/></article>)}</div>
-    </div></section>
-    <section className="disclaimer container"><div className="disclaimer-icon"><Info size={20}/></div><div><b>Ruang warga berbasis komunitas.</b><p>LaporinAja adalah prototype kompetisi, bukan kanal resmi pemerintah dan tidak terhubung dengan instansi mana pun.</p></div><Link to="/tentang" aria-label="Baca tentang LaporinAja"><ArrowRight size={18}/></Link></section>
+
+    <section className="home-section">
+      <div className="home-wrap">
+        <div className="home-head">
+          <div><h2>Dirancang agar mudah dipercaya.</h2><p>Tiga hal yang dijaga setiap kali laporan ditampilkan.</p></div>
+          <Link className="home-link" to="/tentang">Tentang platform <ArrowRight size={16}/></Link>
+        </div>
+        <div className="home-values">
+          {values.map(([icon,title,text])=><article className="home-value" key={title}>
+            <span className="home-value-icon">{icon}</span>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </article>)}
+        </div>
+      </div>
+    </section>
+
+    <section className="home-section">
+      <div className="home-wrap">
+        <div className="home-head">
+          <div><h2>Kategori laporan</h2><p>Pilih jenis fasilitas yang ingin kamu telusuri.</p></div>
+          <Link className="home-link" to="/laporan">Semua laporan <ArrowRight size={16}/></Link>
+        </div>
+        <div className="home-categories">
+          {initialCategories.filter(c=>c.active).map(c=><Link className="home-category" key={c.id} to="/laporan">
+            <span className="home-category-icon"><CategoryIcon category={c.name} size={19}/></span>
+            <span>{c.name}</span>
+            <ArrowUpRight size={16}/>
+          </Link>)}
+        </div>
+      </div>
+    </section>
+
+    <section className="home-section">
+      <div className="home-wrap">
+        <div className="home-how">
+          <div className="home-how-head">
+            <div><h2>Empat langkah, satu laporan.</h2><p>Setiap laporan punya jejak yang bisa diikuti, dari pertama dicatat sampai catatan tindak lanjut terakhir.</p></div>
+            <Button to="/tentang" variant="outline" icon={<ArrowRight size={16}/>}>Baca alurnya</Button>
+          </div>
+          <ol className="home-steps">
+            {steps.map(([n,title,text])=><li className="home-step" key={n}>
+              <b>{n}</b>
+              <div><h3>{title}</h3><p>{text}</p></div>
+            </li>)}
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section className="home-section">
+      <div className="home-wrap">
+        <div className="home-head">
+          <div><h2>Laporan terbaru</h2><p>Tiga laporan terakhir yang sudah ditinjau.</p></div>
+          <Link className="home-link" to="/laporan">Semua laporan <ArrowRight size={16}/></Link>
+        </div>
+        <div className="report-grid">{visible.slice(0,3).map(r=><ReportCard key={r.code} report={toCard(r)}/>)}</div>
+      </div>
+    </section>
+
+    <section className="home-section">
+      <div className="home-wrap">
+        <div className="home-stats">
+          <div className="home-stats-copy">
+            <h2>Statistik demonstrasi</h2>
+            <p>Angka di halaman ini dihitung dari data demo yang sama dengan ruang admin.</p>
+            <Button to="/statistik" variant="outline" icon={<ArrowRight size={16}/>}>Lihat statistik lengkap</Button>
+          </div>
+          <div className="home-stats-grid">
+            <div><b>{total}</b><span>Laporan publik</span></div>
+            <div><b>{counts.IN_PROGRESS}</b><span>Dalam tindak lanjut</span></div>
+            <div><b>{pct(counts.RESOLVED)}%</b><span>Selesai dicatat</span></div>
+            <div><b>{pct(counts.VERIFIED)}%</b><span>Terverifikasi</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="home-section">
+      <div className="home-wrap">
+        <div className="home-trust">
+          <article className="home-callout">
+            <span className="home-callout-icon"><Info size={20}/></span>
+            <h3>Apa arti “selesai dicatat”?</h3>
+            <p>Status selesai menjelaskan catatan pada platform, bukan jaminan bahwa kondisi di lapangan sudah teratasi.</p>
+            <Link className="home-link" to="/tentang">Baca tentang batasan <ArrowRight size={16}/></Link>
+          </article>
+          <article className="home-privacy">
+            <span className="home-callout-icon"><ShieldCheck size={20}/></span>
+            <h3>Data yang kami tampilkan</h3>
+            <ul>
+              <li>Nama, email, dan kontak pelapor tidak ditampilkan.</li>
+              <li>Lokasi ditulis sebagai patokan umum, bukan alamat rumah.</li>
+              <li>Foto laporan tampil setelah laporan dipublikasikan.</li>
+            </ul>
+            <Link className="home-link" to="/kebijakan-privasi">Baca kebijakan privasi <ArrowRight size={16}/></Link>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section className="home-closing">
+      <div className="home-closing-inner">
+        <h2>Punya temuan di sekitarmu?</h2>
+        <p>Mulai dari satu laporan singkat. Identitasmu tetap terjaga.</p>
+        <div className="home-hero-actions">
+          <Button to="/daftar" icon={<ArrowRight size={17}/>}>Lapor sekarang</Button>
+          <Button to="/laporan" variant="outline">Lihat laporan warga</Button>
+        </div>
+      </div>
+    </section>
   </main></AppShell>
 }
 
