@@ -14,10 +14,49 @@
 /* ------------------------------------------------------------------ hero */
 
 .home-page .home-hero {
-  background: var(--app-navy);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #1b303e;
+}
+
+.home-page .home-hero-waves {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.home-page .hero-wave-flow {
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.home-page .hero-wave-flow-blue {
+  filter: blur(10px) saturate(118%);
+  opacity: 0.6;
+  animation: hero-wave-blue-drift 12s ease-in-out infinite;
+}
+
+.home-page .hero-wave-flow-aqua {
+  filter: blur(14px) saturate(112%);
+  opacity: 0.5;
+  animation: hero-wave-aqua-drift 12s ease-in-out -3s infinite;
+}
+
+.home-page .hero-wave-flow-accent {
+  filter: blur(18px);
+  opacity: 0.36;
+  animation: hero-wave-accent-drift 12s ease-in-out infinite;
 }
 
 .home-page .home-hero-inner {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
@@ -26,6 +65,34 @@
   grid-template-columns: minmax(0, 1fr) 512px;
   gap: 64px;
   align-items: center;
+}
+
+@keyframes hero-wave-blue-drift {
+  0%, 100% { transform: translate3d(-2%, 0, 0) rotate(-1deg) scale(1.02, 1); opacity: 0.58; }
+  25% { transform: translate3d(1%, -1.5%, 0) rotate(1deg) scale(1.05, 1.02); opacity: 0.66; }
+  50% { transform: translate3d(2%, 1%, 0) rotate(2deg) scale(1.02, 1.04); opacity: 0.54; }
+  75% { transform: translate3d(-1%, 1.5%, 0) rotate(-1deg) scale(1.06, 1.01); opacity: 0.64; }
+}
+
+@keyframes hero-wave-aqua-drift {
+  0%, 100% { transform: translate3d(2%, 1%, 0) rotate(1deg) scale(1.04, 1.02); opacity: 0.48; }
+  25% { transform: translate3d(-1.5%, 1%, 0) rotate(-1deg) scale(1.02, 1.04); opacity: 0.57; }
+  50% { transform: translate3d(-2%, -1%, 0) rotate(-2deg) scale(1.05, 1); opacity: 0.46; }
+  75% { transform: translate3d(1%, -1.5%, 0) rotate(1deg) scale(1.02, 1.05); opacity: 0.56; }
+}
+
+@keyframes hero-wave-accent-drift {
+  0%, 100% { transform: translate3d(-2%, 1%, 0) rotate(-1deg) scale(1.02, 1); opacity: 0.32; }
+  25% { transform: translate3d(1%, -1%, 0) rotate(1deg) scale(1.04, 1.02); opacity: 0.4; }
+  50% { transform: translate3d(2%, 0, 0) rotate(2deg) scale(1.02, 1.04); opacity: 0.3; }
+  75% { transform: translate3d(-1%, 1%, 0) rotate(-1deg) scale(1.04, 1.01); opacity: 0.38; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page .hero-wave-flow {
+    animation: none;
+    will-change: auto;
+  }
 }
 
 .home-page .home-hero-copy h1 {

@@ -23,6 +23,36 @@ export function Home(){
   ]
   return <AppShell pageClass="home-page"><main>
     <section className="home-hero">
+      <svg className="home-hero-waves" viewBox="0 0 1440 700" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="hero-wave-blue" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#24465A" stopOpacity=".84"/>
+            <stop offset=".42" stopColor="#39777C" stopOpacity=".88"/>
+            <stop offset=".76" stopColor="#5FAEAD" stopOpacity=".78"/>
+            <stop offset="1" stopColor="#24465A" stopOpacity=".72"/>
+          </linearGradient>
+          <linearGradient id="hero-wave-aqua" x1="0" y1="0" x2="1" y2=".3">
+            <stop offset="0" stopColor="#39777C" stopOpacity=".5"/>
+            <stop offset=".48" stopColor="#5FAEAD" stopOpacity=".76"/>
+            <stop offset=".72" stopColor="#A8D4D1" stopOpacity=".58"/>
+            <stop offset="1" stopColor="#24465A" stopOpacity=".5"/>
+          </linearGradient>
+          <linearGradient id="hero-wave-orange" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#E77B35" stopOpacity="0"/>
+            <stop offset=".5" stopColor="#E77B35" stopOpacity=".42"/>
+            <stop offset="1" stopColor="#E77B35" stopOpacity="0"/>
+          </linearGradient>
+        </defs>
+        <g className="hero-wave-flow hero-wave-flow-blue">
+          <path fill="url(#hero-wave-blue)" d="M-100 270 C80 165 205 180 350 270 C505 365 650 350 805 248 C975 138 1125 145 1285 235 C1415 308 1515 292 1600 220 L1600 525 C1430 585 1320 490 1170 468 C990 442 900 565 715 570 C510 575 455 470 280 475 C115 480 25 555 -100 520Z"/>
+        </g>
+        <g className="hero-wave-flow hero-wave-flow-aqua">
+          <path fill="url(#hero-wave-aqua)" d="M-120 395 C25 300 160 320 300 390 C445 465 560 480 720 405 C880 330 1015 305 1165 375 C1320 448 1445 440 1580 345 L1580 660 C1425 700 1300 620 1150 595 C990 568 850 650 690 675 C510 705 390 615 230 605 C95 595 5 660 -120 635Z"/>
+        </g>
+        <g className="hero-wave-flow hero-wave-flow-accent">
+          <path fill="url(#hero-wave-orange)" d="M-80 250 C85 205 210 235 355 295 C475 345 590 340 725 280 C850 225 955 210 1085 245 C1215 280 1350 290 1510 225 L1510 320 C1350 375 1235 355 1090 322 C950 290 850 305 720 358 C570 420 450 412 305 352 C165 295 60 290 -80 335Z"/>
+        </g>
+      </svg>
       <div className="home-hero-inner">
         <div className="home-hero-copy">
           <h1>Laporan warga,<br/>tindak lanjut yang <em>terbuka.</em></h1>
