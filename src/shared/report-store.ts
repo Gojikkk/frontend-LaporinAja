@@ -24,6 +24,8 @@ export type AdminReport = {
   description: string
   photos: number
   history: AdminHistoryEntry[]
+  /** Kode laporan utama bila laporan ini ditandai sebagai duplikat. */
+  primaryReportCode?: string
 }
 
 export const adminStatus: Record<Status, { label: string; tone: string }> = {
@@ -264,6 +266,7 @@ const seededReports: AdminReport[] = [
     landmark: 'Taman sisi utara',
     status: 'DUPLICATE',
     submittedAt: '2026-10-26',
+    primaryReportCode: 'LPR-2026-000021',
     reporter: 'Bagas',
     description:
       'Salah satu bangku taman terlihat rusak pada bagian sandaran. Ada laporan serupa yang telah dicatat sebelumnya.',
@@ -620,6 +623,42 @@ const seededReports: AdminReport[] = [
       },
     ],
   },
+  {
+    code: 'LPR-2026-000021',
+    title: 'Bangku taman rusak di Taman Citarum',
+    category: 'Fasilitas umum',
+    city: 'Bandung',
+    district: 'Bandung Wetan',
+    village: 'Citarum',
+    landmark: 'Taman sisi utara',
+    status: 'RESOLVED',
+    submittedAt: '2026-10-22',
+    reporter: 'Nadia',
+    description:
+      'Sandaran salah satu bangku taman patah sehingga tidak aman dipakai. Bagian kayu juga sudah lapuk di sisi kanan.',
+    photos: 2,
+    history: [
+      { at: '22 Okt 2026 · 09.12 WIB', title: 'Laporan dikirim', transition: '— → Menunggu verifikasi', note: 'Dua foto kondisi awal diterima.' },
+      {
+        at: '22 Okt 2026 · 10.05 WIB',
+        title: 'Laporan diverifikasi',
+        transition: 'Menunggu verifikasi → Terverifikasi',
+        note: 'Lokasi dan kategori sesuai.',
+      },
+      {
+        at: '23 Okt 2026 · 08.40 WIB',
+        title: 'Tindak lanjut dimulai',
+        transition: 'Terverifikasi → Sedang ditindaklanjuti',
+        note: 'Perbaikan bangku dijadwalkan pada akhir pekan.',
+      },
+      {
+        at: '25 Okt 2026 · 14.20 WIB',
+        title: 'Tindak lanjut selesai dicatat',
+        transition: 'Sedang ditindaklanjuti → Tindak lanjut selesai',
+        note: 'Sandaran bangku diganti dan permukaan kayu dirapikan. Bukti penyelesaian dilampirkan.',
+      },
+    ],
+  },
 ]
 
 /* ------------------------------------------------------------------------- */
@@ -684,6 +723,7 @@ export function transitionReport(
     return {
       ...report,
       status: to,
+      primaryReportCode: to === 'DUPLICATE' ? report.primaryReportCode : undefined,
       history: [
         ...report.history,
         {
@@ -696,6 +736,55 @@ export function transitionReport(
     }
   })
   emit()
+}
+
+/**
+ * Tandai laporan sebagai duplikat dan hubungkan ke laporan utama.
+ * Laporan utama wajib sudah tampil di publik dan bukan duplikat, sehingga
+ * rantai referensi tidak pernah lebih dari satu tingkat.
+ */
+export function markDuplicate(code: string, primaryCode: string, note?: string) {
+  const primary = reports.find((report) => report.code === primaryCode)
+  if (code === primaryCode || !primary || !isPublicReport(primary) || primary.status === 'DUPLICATE') {
+    return false
+  }
+  reports = reports.map((report) => {
+    if (report.code !== code) return report
+    const extra = note?.trim()
+    return {
+      ...report,
+      status: 'DUPLICATE',
+      primaryReportCode: primaryCode,
+      history: [
+        ...report.history,
+        {
+          at: jakartaNow(),
+          title: 'Ditandai sebagai duplikat',
+          transition: `${adminStatus[report.status].label} → Duplikat`,
+          note: `${extra ? `${extra} ` : ''}Merujuk pada laporan utama ${primaryCode}.`,
+        },
+      ],
+    }
+  })
+  emit()
+  return true
+}
+
+/** Kandidat laporan utama: sudah publik, bukan duplikat, dan bukan dirinya sendiri. */
+export function duplicateCandidates(rows: AdminReport[], code: string) {
+  const self = rows.find((report) => report.code === code)
+  return rows
+    .filter((report) => report.code !== code && isPublicReport(report) && report.status !== 'DUPLICATE')
+    .sort((a, b) => {
+      const sameCategory = Number(b.category === self?.category) - Number(a.category === self?.category)
+      return sameCategory || b.submittedAt.localeCompare(a.submittedAt)
+    })
+}
+
+/** Laporan utama yang dirujuk sebuah duplikat, bila ada. */
+export function primaryReportOf(rows: AdminReport[], report: AdminReport) {
+  if (!report.primaryReportCode) return undefined
+  return rows.find((row) => row.code === report.primaryReportCode)
 }
 
 export function countByStatus(rows: AdminReport[]) {
@@ -747,7 +836,8 @@ export function toCard(report: AdminReport): Report {
     village: report.village,
     status: report.status,
     date: formatSubmitted(report.submittedAt),
-    description: report.description,
+    description: report.description,
+    primaryReportCode: report.primaryReportCode,
     tone,
   }
 }

@@ -76,7 +76,7 @@ Demo data tersedia di `src/shared/report-store.ts` — perubahan status admin la
 ```text
 src/
   app/App.tsx                  route table and page composition
-  components/ui.tsx            shared navigation, buttons, badges, cards, timeline, dialog, toast
+  components/ui.tsx            shared navigation, buttons, badges, cards, primary-report card, timeline, dialog, toast
   features/
     public/pages.tsx            landing, reports, detail, statistics, about, privacy
     auth/pages.tsx              login and registration
@@ -123,6 +123,15 @@ Vite membaca nilai `VITE_*` saat build. Atur URL sesuai environment dan bangun u
 - Untuk deployment lintas-site yang tidak dapat membaca cookie CSRF API, set `VITE_CSRF_ENDPOINT` ke endpoint yang mengembalikan token CSRF di `{ "data": { "csrfToken": "..." } }`; token hanya ditahan di memori selama halaman terbuka.
 - API mengembalikan error konsisten `{ "error": { "code", "message", "fields" } }`. Klien memetakannya ke `ApiError`; kegagalan jaringan menampilkan pesan umum bahasa Indonesia.
 - Endpoint yang dipakai form: `POST /auth/register`, `POST /auth/login`, dan `POST /reports` (multipart). Halaman laporan, statistik, dan layar admin memakai data demonstrasi dari `src/shared/report-store.ts`; hasil moderasi admin (status, catatan tindak lanjut, linimasa) langsung tercermin di halaman publik dan pelapor.
+
+## Aturan laporan duplikat
+
+- Backend nantinya mengirim `primary_report_code` pada objek laporan. Field ini hanya terisi saat status `DUPLICATE` dan berisi kode laporan yang menjadi acuan.
+- Admin dapat menandai laporan berstatus `SUBMITTED`, `VERIFIED`, atau `IN_PROGRESS` sebagai duplikat, memilih laporan utama, dan menulis catatan opsional. Pilihan laporan utama dibatasi ke laporan yang sudah tampil di publik, bukan duplikat, dan bukan laporan itu sendiri sehingga rantai rujukan maksimal satu tingkat.
+- Laporan utama muncul lebih dulu bila kategorinya sama dengan laporan duplikat.
+- Menandai duplikat menambah entri linimasa dan tetap membuat laporan dapat dibaca publik lewat kartu "Laporan ini tercatat sebagai laporan serupa" yang menautkan ke laporan utama.
+- Status `DUPLICATE` dapat dikembalikan ke antrean verifikasi; saat status berubah keluar dari `DUPLICATE`, `primary_report_code` dikosongkan.
+- Laporan duplikat tetap tampil di `/laporan` dan tetap dihitung pada statistik.
 
 ## Rute utama
 
