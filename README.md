@@ -72,6 +72,8 @@ Vite membaca nilai `VITE_*` saat build. Atur URL sesuai environment dan bangun u
 - Admin dapat menandai laporan berstatus `SUBMITTED`, `VERIFIED`, atau `IN_PROGRESS` sebagai duplikat, memilih laporan utama, dan menulis catatan opsional. Pilihan laporan utama dibatasi ke laporan yang sudah tampil di publik, bukan duplikat, dan bukan laporan itu sendiri sehingga rantai rujukan maksimal satu tingkat.
 - Laporan utama muncul lebih dulu bila kategorinya sama dengan laporan duplikat.
 - Menandai duplikat menambah entri linimasa dan tetap membuat laporan dapat dibaca publik lewat kartu "Laporan ini tercatat sebagai laporan serupa" yang menautkan ke laporan utama.
+- Bila laporan yang menjadi acuan kemudian ditandai duplikat, rujukan laporan lain dialihkan ke acuan barunya agar rantai tetap satu tingkat.
+- Kartu rujukan hanya menautkan laporan utama yang masih tampil publik. Bila laporan utama ditolak, kartu menampilkan keterangan tanpa tautan agar tidak berujung pada halaman kosong.
 - Status `DUPLICATE` dapat dikembalikan ke antrean verifikasi; saat status berubah keluar dari `DUPLICATE`, `primary_report_code` dikosongkan.
 - Laporan duplikat tetap tampil di `/laporan` dan tetap dihitung pada statistik.
 

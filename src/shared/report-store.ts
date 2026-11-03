@@ -740,17 +740,41 @@ export function transitionReport(
 
 /**
  * Tandai laporan sebagai duplikat dan hubungkan ke laporan utama.
- * Laporan utama wajib sudah tampil di publik dan bukan duplikat, sehingga
- * rantai referensi tidak pernah lebih dari satu tingkat.
+ * Laporan utama wajib sudah tampil di publik dan bukan duplikat. Bila laporan
+ * yang ditandai sebelumnya menjadi acuan laporan lain, rujukan itu dialihkan
+ * ke laporan utama yang baru agar rantai referensi tetap satu tingkat.
  */
 export function markDuplicate(code: string, primaryCode: string, note?: string) {
+  const source = reports.find((report) => report.code === code)
   const primary = reports.find((report) => report.code === primaryCode)
-  if (code === primaryCode || !primary || !isPublicReport(primary) || primary.status === 'DUPLICATE') {
+  if (
+    !source ||
+    code === primaryCode ||
+    !primary ||
+    !isPublicReport(primary) ||
+    primary.status === 'DUPLICATE' ||
+    !['SUBMITTED', 'VERIFIED', 'IN_PROGRESS'].includes(source.status)
+  ) {
     return false
   }
+  const extra = note?.trim()
   reports = reports.map((report) => {
+    // Rujukan yang sebelumnya menunjuk ke laporan ini dialihkan ke acuan baru.
+    if (report.primaryReportCode === code) {
+      return {
+        ...report,
+        primaryReportCode: primaryCode,
+        history: [
+          ...report.history,
+          {
+            at: jakartaNow(),
+            title: 'Rujukan duplikat dialihkan',
+            note: `Laporan utama ${code} ditandai duplikat, sehingga rujukan dialihkan ke laporan utama ${primaryCode}.`,
+          },
+        ],
+      }
+    }
     if (report.code !== code) return report
-    const extra = note?.trim()
     return {
       ...report,
       status: 'DUPLICATE',
@@ -785,6 +809,16 @@ export function duplicateCandidates(rows: AdminReport[], code: string) {
 export function primaryReportOf(rows: AdminReport[], report: AdminReport) {
   if (!report.primaryReportCode) return undefined
   return rows.find((row) => row.code === report.primaryReportCode)
+}
+
+/**
+ * Laporan utama yang masih tampil publik dan bukan duplikat. Halaman warga
+ * memakai ini agar tautan tidak berujung pada laporan yang sudah ditolak atau
+ * pada rantai duplikat bertingkat.
+ */
+export function publicPrimaryReportOf(rows: AdminReport[], report: AdminReport) {
+  const primary = primaryReportOf(rows, report)
+  return primary && isPublicReport(primary) && primary.status !== 'DUPLICATE' ? primary : undefined
 }
 
 export function countByStatus(rows: AdminReport[]) {

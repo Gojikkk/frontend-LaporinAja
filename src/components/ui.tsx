@@ -8,11 +8,11 @@ const categoryIcons = { 'Jalan rusak': Route, 'Lampu jalan': Lamp, Sampah: Trash
 export function CategoryIcon({ category, size=22 }: { category:string; size?:number }) { const Icon = categoryIcons[category as keyof typeof categoryIcons] ?? Shapes; return <Icon size={size} strokeWidth={1.8} aria-hidden="true"/> }
 export function StatusBadge({ status }: { status: Status }) { const s=statusInfo[status], Icon=s.icon; return <span className={`badge ${s.cls}`}><Icon size={14} strokeWidth={2.2} aria-hidden="true"/><span>{s.text}</span></span> }
 
-export function PrimaryReportCard({ report, primary }: { report:Report; primary:Report }) {
+export function PrimaryReportCard({ report, primary }: { report:Report; primary?:Report }) {
   const [copied,setCopied]=useState(false)
   useEffect(()=>{ if(!copied) return; const t=setTimeout(()=>setCopied(false),2400); return ()=>clearTimeout(t) },[copied])
   function copyLink(){
-    if(!navigator.clipboard){ setCopied(false); return }
+    if(!primary||!navigator.clipboard){ setCopied(false); return }
     navigator.clipboard.writeText(`${window.location.origin}/laporan/${primary.code}`).then(()=>setCopied(true)).catch(()=>setCopied(false))
   }
   return <section className="primary-card" aria-labelledby="primary-report-heading">
@@ -20,24 +20,26 @@ export function PrimaryReportCard({ report, primary }: { report:Report; primary:
       <span className="primary-card-icon"><Link2 size={17} aria-hidden="true"/></span>
       <div>
         <h2 id="primary-report-heading">Laporan ini tercatat sebagai laporan serupa</h2>
-        <p>Laporan <b>{report.code}</b> digabungkan ke laporan utama di bawah ini.</p>
+        <p>{primary ? <>Laporan <b>{report.code}</b> digabungkan ke laporan utama di bawah ini.</> : <>Laporan <b>{report.code}</b> merujuk pada laporan utama yang sedang tidak tersedia untuk publik.</>}</p>
       </div>
     </div>
-    <div className="primary-card-body">
-      <div>
-        <span className="primary-card-code">{primary.code}</span>
-        <Link className="primary-card-title" to={`/laporan/${primary.code}`}>{primary.title}</Link>
-        <span className="primary-card-meta">{primary.category} · {primary.village}, {primary.district}</span>
+    {primary ? <>
+      <div className="primary-card-body">
+        <div>
+          <span className="primary-card-code">{primary.code}</span>
+          <Link className="primary-card-title" to={`/laporan/${primary.code}`}>{primary.title}</Link>
+          <span className="primary-card-meta">{primary.category} · {primary.village}, {primary.district}</span>
+        </div>
+        <StatusBadge status={primary.status}/>
       </div>
-      <StatusBadge status={primary.status}/>
-    </div>
-    <div className="primary-card-actions">
-      <Link className="button outline" to={`/laporan/${primary.code}`}>Buka laporan utama <ArrowRight size={16} aria-hidden="true"/></Link>
-      <button type="button" className="primary-card-copy" onClick={copyLink}>
-        {copied?<Check size={15} aria-hidden="true"/>:<Copy size={15} aria-hidden="true"/>}
-        {copied?'Tautan tersalin':'Salin tautan'}
-      </button>
-    </div>
+      <div className="primary-card-actions">
+        <Link className="button outline" to={`/laporan/${primary.code}`}>Buka laporan utama <ArrowRight size={16} aria-hidden="true"/></Link>
+        <button type="button" className="primary-card-copy" onClick={copyLink}>
+          {copied?<Check size={15} aria-hidden="true"/>:<Copy size={15} aria-hidden="true"/>}
+          {copied?'Tautan tersalin':'Salin tautan'}
+        </button>
+      </div>
+    </> : <p className="primary-card-note">Laporan utama belum dapat ditampilkan. Hubungi administrator platform bila tautan ini perlu diperiksa.</p>}
   </section>
 }
 
