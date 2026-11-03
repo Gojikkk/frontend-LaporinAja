@@ -1512,7 +1512,7 @@ html:has(.app-theme) body {
 
 .app-theme .listing-filter {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: end;
   gap: 16px;
   padding: 24px;
@@ -1522,11 +1522,11 @@ html:has(.app-theme) body {
 .app-theme .listing-filter .filter-field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   min-width: 0;
 }
 
 .app-theme .listing-filter .filter-label {
+  margin-bottom: 8px;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.5;
@@ -1534,9 +1534,11 @@ html:has(.app-theme) body {
 }
 
 .app-theme .listing-filter .search-field {
+  flex: none;
   width: 100%;
   max-width: none;
   height: 48px;
+  min-height: 48px;
   padding: 0 12px;
   border-radius: 8px;
 }
@@ -1546,11 +1548,16 @@ html:has(.app-theme) body {
 }
 
 .app-theme .listing-filter .select-field {
+  flex: none;
   width: 100%;
+  height: 48px;
+  min-height: 48px;
 }
 
 .app-theme .listing-filter .select-trigger {
+  height: 48px;
   min-height: 48px;
+  padding: 0 12px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
@@ -1560,6 +1567,7 @@ html:has(.app-theme) body {
 .app-theme .listing-actions {
   grid-column: 1 / -1;
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 12px;
 }
@@ -1758,7 +1766,7 @@ html:has(.app-theme) body {
   line-height: 1.6;
 }
 
-@media (max-width: 1000px) {
+@media (min-width: 768px) {
   .app-theme .listing-filter {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1766,7 +1774,19 @@ html:has(.app-theme) body {
   .app-theme .listing-filter .filter-field-search {
     grid-column: 1 / -1;
   }
+}
 
+@media (min-width: 1001px) {
+  .app-theme .listing-filter {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .app-theme .listing-filter .filter-field-search {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 1000px) {
   .app-theme .listing-grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1774,21 +1794,8 @@ html:has(.app-theme) body {
 
 @media (max-width: 600px) {
   .app-theme .listing-filter {
-    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
     padding: 20px;
-  }
-
-  .app-theme .listing-filter .filter-field-search {
-    grid-column: auto;
-  }
-
-  .app-theme .listing-actions {
-    flex-direction: column;
-  }
-
-  .app-theme .listing-actions .button {
-    width: 100%;
   }
 
   .app-theme .listing-grid {
