@@ -58,7 +58,7 @@ Frontend sudah mencakup seluruh alur **MVP (FR-001 s.d. FR-018)** dari PRD:
 | Landing page | ✅ | Hero, kategori, statistik, CTA |
 | Registrasi & Login | ✅ | Form validasi + error handling |
 | Pembuatan laporan | ✅ | Form multipart dengan upload foto |
-| Daftar laporan publik | ✅ | Filter kategori, status, wilayah |
+| Daftar laporan publik | ✅ | Filter kategori, status, kata kunci, dan pagination |
 | Detail laporan publik | ✅ | Riwayat status + bukti tindak lanjut |
 | Dashboard pelapor | ✅ | Daftar laporan milik sendiri + tracking |
 | Dashboard admin | ✅ | Antrean laporan, aksi verifikasi/tolak |
@@ -144,6 +144,19 @@ Pelapor: `/dashboard`, `/lapor/baru`, `/dashboard/laporan/:code`.
 Administrator platform: `/admin`, `/admin/laporan`, `/admin/laporan/:code`, `/admin/kategori`, `/admin/statistik`.
 
 Halaman sistem: `/403` untuk akses ditolak; rute lain yang tidak dikenal menampilkan 404.
+
+### Parameter daftar laporan
+
+`/laporan` menyimpan filter di URL agar tautan bisa dibagikan dan tombol kembali/maju tetap bekerja. Data masih berasal dari demo store, tetapi penyaringan dan pagination dipisahkan di `src/shared/report-store.ts` agar sumbernya mudah diganti API.
+
+| Parameter | Contoh | Keterangan |
+|-----------|--------|------------|
+| `q` | `?q=lampu` | Kata kunci pada judul, kode, kota, kecamatan, atau kelurahan |
+| `kategori` | `?kategori=lampu-jalan` | Slug kategori dari `initialCategories` |
+| `status` | `?status=VERIFIED` | Salah satu status publik (`VERIFIED`, `IN_PROGRESS`, `RESOLVED`, `DUPLICATE`) |
+| `halaman` | `?halaman=2` | Halaman aktif; 6 laporan per halaman, default 1 |
+
+Nilai yang tidak dikenal diabaikan dan halaman di luar rentang dirapikan otomatis. Filter diterapkan lewat tombol **Terapkan filter**; **Reset** mengembalikan semua parameter.
 
 ## Responsif dan aksesibilitas
 
