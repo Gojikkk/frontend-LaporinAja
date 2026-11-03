@@ -586,6 +586,17 @@ html:has(.app-theme) body {
   font-size: 13px;
 }
 
+.app-theme .primary-card-note {
+  margin: 0;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px dashed #c4b5fd;
+  border-radius: 10px;
+  color: #6b46c1;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .app-theme .primary-card-actions {
   display: flex;
   flex-wrap: wrap;

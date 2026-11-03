@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Bell, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, CircleAlert, Clock3, FileCheck2, FilePlus2, Filter, ImagePlus, Info, LayoutDashboard, ListChecks, ListFilter, LockKeyhole, LogIn, MapPin, Menu, MessageSquareText, MoreHorizontal, Search, ShieldCheck, SlidersHorizontal, Users, X } from 'lucide-react'
 import { AppShell, Button, CategoryIcon, Dropdown, PageIntro, PrimaryReportCard, ReportCard, StatCard, StatusBadge, Timeline, TextField, Toast, Modal } from '../../components/ui'
-import { countByStatus, publicReports, publicStatuses, latestNote, primaryReportOf, toCard, useReports } from '../../shared/report-store'
+import { countByStatus, publicReports, publicStatuses, latestNote, publicPrimaryReportOf, toCard, useReports } from '../../shared/report-store'
 import { initialCategories, statusInfo, type Status } from '../../shared/report-data'
 export function Home(){
   const reports=useReports()
@@ -161,7 +161,7 @@ export function Detail(){
   const found=publicReports(reports).find(r=>r.code===code)
   if(!found) return <AppShell><main className="page container"><Link to="/laporan" className="back-link"><ArrowLeft size={16}/> Kembali ke daftar laporan</Link><div className="empty-state"><Search size={25}/><h2>Laporan tidak ditemukan</h2><p>Laporan ini belum dipublikasikan atau tautannya sudah berubah.</p><Button to="/laporan" variant="outline">Lihat semua laporan</Button></div></main></AppShell>
   const report=toCard(found),notes=found.history,last=latestNote(found)
-  const primaryFound=primaryReportOf(reports,found)
+  const primaryFound=publicPrimaryReportOf(reports,found)
   const primary=primaryFound?toCard(primaryFound):undefined
   return <AppShell><main className="page container">
     <Link to="/laporan" className="back-link"><ArrowLeft size={16}/> Kembali ke daftar laporan</Link>
@@ -169,7 +169,7 @@ export function Detail(){
     <div className="detail-layout">
       <div className="detail-main">
         <div className={`detail-art report-art ${report.tone}`}><span className="art-symbol"><CategoryIcon category={report.category} size={52}/></span><span className="art-code">Dokumentasi laporan · {report.code}</span></div>
-        {primary?<PrimaryReportCard report={report} primary={primary}/>:null}
+        {report.status==='DUPLICATE'?<PrimaryReportCard report={report} primary={primary}/>:null}
         <section className="detail-block"><h2>Tentang laporan</h2><p>{report.description}</p><p className="privacy-hint"><LockKeyhole size={15}/> Identitas pelapor tidak ditampilkan.</p></section>
         <section className="detail-block"><h2>{primary?'Catatan penggabungan':'Catatan tindak lanjut'}</h2><div className="follow-card"><span className="follow-icon"><MessageSquareText size={17}/></span><div><b>{last.title}</b><p>{last.note}</p><small>Administrator platform · {last.at}</small></div></div></section>
       </div>
