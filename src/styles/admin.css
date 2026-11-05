@@ -968,8 +968,7 @@ html:has(.adm)::-webkit-scrollbar {
   flex: none;
   border-radius: 6px;
   background: var(--adm-teal-soft);
-  font-size: 18px;
-  line-height: 1;
+  color: var(--adm-teal);
 }
 
 .adm-icon-chev {
@@ -1010,9 +1009,10 @@ html:has(.adm)::-webkit-scrollbar {
 }
 
 .adm-icon-option-glyph {
+  display: grid;
+  place-items: center;
   flex: none;
-  font-size: 18px;
-  line-height: 1;
+  color: var(--adm-teal);
 }
 
 .adm-icon-option:hover,

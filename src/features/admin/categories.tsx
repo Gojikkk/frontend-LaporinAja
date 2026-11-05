@@ -1,5 +1,27 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
-import { CheckCircle2, ChevronDown, CircleAlert, CircleHelp, Pencil, Plus, Trash2, ToggleLeft, ToggleRight, X } from 'lucide-react'
+import {
+  Building2,
+  CheckCircle2,
+  ChevronDown,
+  CircleAlert,
+  CircleHelp,
+  Construction,
+  Droplets,
+  Lamp,
+  Pencil,
+  Plus,
+  Route,
+  Shapes,
+  ShieldCheck,
+  Sparkles,
+  TrafficCone,
+  Trash2,
+  Trees,
+  ToggleLeft,
+  ToggleRight,
+  Waves,
+  X,
+} from 'lucide-react'
 import { initialCategories, type ReportCategory } from '../../shared/report-data'
 import { useAdminReports } from './data'
 import { AdminShell, useAdminTitle } from './shell'
@@ -9,24 +31,33 @@ const slugify = (value: string) =>
 
 type Draft = { name: string; slug: string; icon: string }
 
-/* Pilihan ikon siap pakai supaya admin tidak perlu mengetik emoji manual. */
+/* Pilihan ikon visual untuk kategori, memakai set ikon yang sama dengan
+   halaman publik agar tampil konsisten. */
 const iconOptions = [
-  { value: '🛣️', label: 'Jalan' },
-  { value: '💡', label: 'Lampu' },
-  { value: '🗑️', label: 'Sampah' },
-  { value: '🌊', label: 'Saluran air' },
-  { value: '🏢', label: 'Fasilitas umum' },
-  { value: '🌳', label: 'Taman' },
-  { value: '🚦', label: 'Lalu lintas' },
-  { value: '💧', label: 'Air bersih' },
-  { value: '🏗️', label: 'Infrastruktur' },
-  { value: '🚨', label: 'Keamanan' },
-  { value: '🧹', label: 'Kebersihan' },
-  { value: '🌱', label: 'Lingkungan' },
-  { value: '📌', label: 'Lainnya' },
+  { value: 'route', label: 'Jalan', Icon: Route },
+  { value: 'lamp', label: 'Lampu', Icon: Lamp },
+  { value: 'trash', label: 'Sampah', Icon: Trash2 },
+  { value: 'droplets', label: 'Saluran air', Icon: Droplets },
+  { value: 'building', label: 'Fasilitas umum', Icon: Building2 },
+  { value: 'trees', label: 'Taman', Icon: Trees },
+  { value: 'traffic', label: 'Lalu lintas', Icon: TrafficCone },
+  { value: 'shield', label: 'Keamanan', Icon: ShieldCheck },
+  { value: 'sparkles', label: 'Kebersihan', Icon: Sparkles },
+  { value: 'waves', label: 'Banjir', Icon: Waves },
+  { value: 'construction', label: 'Perbaikan', Icon: Construction },
+  { value: 'shapes', label: 'Lainnya', Icon: Shapes },
 ] as const
 
-const emptyDraft: Draft = { name: '', slug: '', icon: '📌' }
+const iconMap: Record<string, (typeof iconOptions)[number]['Icon']> = Object.fromEntries(
+  iconOptions.map((option) => [option.value, option.Icon]),
+)
+
+const emptyDraft: Draft = { name: '', slug: '', icon: 'shapes' }
+
+function CategoryGlyph({ name, size = 20 }: { name: string; size?: number }) {
+  const Icon = iconMap[name] ?? Shapes
+  return <Icon size={size} strokeWidth={1.8} aria-hidden="true" />
+}
 
 /** Dropdown ikon: panel pilihan ikut mengalir di dalam dialog agar tidak terpotong. */
 function IconPicker({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -56,7 +87,7 @@ function IconPicker({ value, onChange }: { value: string; onChange: (value: stri
       >
         <span className="adm-icon-trigger-value">
           <span className="adm-icon-glyph" aria-hidden="true">
-            {value}
+            <CategoryGlyph name={value} size={18} />
           </span>
           <span>{selected ? selected.label : 'Ikon kustom'}</span>
         </span>
@@ -65,22 +96,22 @@ function IconPicker({ value, onChange }: { value: string; onChange: (value: stri
 
       {open ? (
         <div className="adm-icon-menu" role="listbox" aria-labelledby="adm-cat-icon-label">
-          {iconOptions.map((option) => (
+          {iconOptions.map(({ value: iconValue, label, Icon }) => (
             <button
-              key={option.value}
+              key={iconValue}
               type="button"
               role="option"
-              aria-selected={option.value === value}
-              className={option.value === value ? 'adm-icon-option selected' : 'adm-icon-option'}
+              aria-selected={iconValue === value}
+              className={iconValue === value ? 'adm-icon-option selected' : 'adm-icon-option'}
               onClick={() => {
-                onChange(option.value)
+                onChange(iconValue)
                 setOpen(false)
               }}
             >
               <span className="adm-icon-option-glyph" aria-hidden="true">
-                {option.value}
+                <Icon size={18} strokeWidth={1.8} />
               </span>
-              <span>{option.label}</span>
+              <span>{label}</span>
             </button>
           ))}
         </div>
@@ -391,7 +422,7 @@ export function AdminCategories() {
               <article className="adm-cat-card" key={category.id}>
                 <div className="adm-cat-card-top">
                   <span className="adm-cat-icon" aria-hidden="true">
-                    {category.icon}
+                    <CategoryGlyph name={category.icon} />
                   </span>
                   <span className={category.active ? 'adm-badge tone-resolved' : 'adm-badge'}>
                     {category.active ? 'Aktif' : 'Nonaktif'}
