@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
-import { CheckCircle2, CircleAlert, CircleHelp, Pencil, Plus, Trash2, ToggleLeft, ToggleRight, X } from 'lucide-react'
+import { CheckCircle2, ChevronDown, CircleAlert, CircleHelp, Pencil, Plus, Trash2, ToggleLeft, ToggleRight, X } from 'lucide-react'
 import { initialCategories, type ReportCategory } from '../../shared/report-data'
 import { useAdminReports } from './data'
 import { AdminShell, useAdminTitle } from './shell'
@@ -9,7 +9,85 @@ const slugify = (value: string) =>
 
 type Draft = { name: string; slug: string; icon: string }
 
-const emptyDraft: Draft = { name: '', slug: '', icon: '•' }
+/* Pilihan ikon siap pakai supaya admin tidak perlu mengetik emoji manual. */
+const iconOptions = [
+  { value: '🛣️', label: 'Jalan' },
+  { value: '💡', label: 'Lampu' },
+  { value: '🗑️', label: 'Sampah' },
+  { value: '🌊', label: 'Saluran air' },
+  { value: '🏢', label: 'Fasilitas umum' },
+  { value: '🌳', label: 'Taman' },
+  { value: '🚦', label: 'Lalu lintas' },
+  { value: '💧', label: 'Air bersih' },
+  { value: '🏗️', label: 'Infrastruktur' },
+  { value: '🚨', label: 'Keamanan' },
+  { value: '🧹', label: 'Kebersihan' },
+  { value: '🌱', label: 'Lingkungan' },
+  { value: '📌', label: 'Lainnya' },
+] as const
+
+const emptyDraft: Draft = { name: '', slug: '', icon: '📌' }
+
+/** Dropdown ikon: panel pilihan ikut mengalir di dalam dialog agar tidak terpotong. */
+function IconPicker({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const close = (event: MouseEvent) => {
+      if (ref.current && !(event.target as Node).contains(ref.current)) setOpen(false)
+    }
+    document.addEventListener('mousedown', close)
+    return () => document.removeEventListener('mousedown', close)
+  }, [open])
+
+  const selected = iconOptions.find((option) => option.value === value)
+
+  return (
+    <div className="adm-icon-picker" ref={ref}>
+      <button
+        id="adm-cat-icon-trigger"
+        type="button"
+        className="adm-icon-trigger"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+      >
+        <span className="adm-icon-trigger-value">
+          <span className="adm-icon-glyph" aria-hidden="true">
+            {value}
+          </span>
+          <span>{selected ? selected.label : 'Ikon kustom'}</span>
+        </span>
+        <ChevronDown size={18} className={open ? 'adm-icon-chev open' : 'adm-icon-chev'} aria-hidden="true" />
+      </button>
+
+      {open ? (
+        <div className="adm-icon-menu" role="listbox" aria-labelledby="adm-cat-icon-label">
+          {iconOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              role="option"
+              aria-selected={option.value === value}
+              className={option.value === value ? 'adm-icon-option selected' : 'adm-icon-option'}
+              onClick={() => {
+                onChange(option.value)
+                setOpen(false)
+              }}
+            >
+              <span className="adm-icon-option-glyph" aria-hidden="true">
+                {option.value}
+              </span>
+              <span>{option.label}</span>
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  )
+}
 
 /* ------------------------------------------------------------------ dialogs */
 
@@ -93,15 +171,11 @@ function FormDialog({
           </div>
 
           <div className="adm-dialog-field">
-            <label htmlFor="adm-cat-icon">Ikon</label>
-            <input
-              id="adm-cat-icon"
-              type="text"
-              value={draft.icon}
-              maxLength={2}
-              onChange={(event) => onChange({ ...draft, icon: event.target.value })}
-            />
-            <span className="adm-help">Satu karakter, misalnya ⌁ atau ☼.</span>
+            <label htmlFor="adm-cat-icon-trigger" id="adm-cat-icon-label">
+              Ikon
+            </label>
+            <IconPicker value={draft.icon} onChange={(icon) => onChange({ ...draft, icon })} />
+            <span className="adm-help">Pilih ikon yang paling menggambarkan kategori.</span>
           </div>
 
           {error ? (
